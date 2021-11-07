@@ -1,0 +1,14 @@
+{
+  "name": "overlay",
+  "version": "1.0.0",
+  "description": "Overlay",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^15.3.0"
+  }
+}
