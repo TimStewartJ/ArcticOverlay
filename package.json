@@ -4,11 +4,23 @@
   "description": "Overlay",
   "main": "index.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "electron": "^15.3.0"
+  "dependencies": {},
+  "devDependencies": {
+    "always-tail": "^0.2.0",
+    "electron": "^15.3.0",
+    "electron-builder": "^22.13.1",
+    "electron-store": "^8.0.1",
+    "tail": "^2.2.4"
+  },
+  "build": {
+    "appId": "com.artic.articoverlay",
+    "win": {
+      "target": "nsis"
+    }
   }
 }

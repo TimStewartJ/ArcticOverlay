@@ -1,16 +1,26 @@
-const electron = require('electron');
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron');
+const { write, read } = require('./src/settings.js');
+const pathjs = require('path');
+const { readFromFile } = require('./src/readPlayers.js');
 
-app.whenReady().then(function () {
+app.on('ready', () => {
     const win = new BrowserWindow({
         width: 1000,
         height: 800,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            preload: pathjs.join(__dirname, 'src/preload.js')
         }
-    })
+    });
 
-    win.loadFile('index.html')
+    win.loadFile('index.html');
+
+    let path = app.getPath("home").replace(/\\/g, "\/") + "/.lunarclient/offline/1.8/logs/latest.log";
+    write("path", path);
+
+    ipcMain.handle('reading:start', () => {
+        readFromFile(read("path"), win);
+    });
 })
 
 app.on('window-all-closed', () => {
