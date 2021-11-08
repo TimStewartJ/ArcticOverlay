@@ -34,16 +34,16 @@ window.players.display('showPlayers', (data) => {
     let table = document.getElementById("main-table");
     table.innerHTML = ''; // reset table
     let headrow = document.createElement('tr');
-    fields.forEach(e => {
-        headrow.innerHTML += `<th>${e}</th>`;
+    fields.forEach(field => {
+        headrow.innerHTML += `<th>${field}</th>`;
     })
     table.appendChild(headrow);
 
     data.forEach(element => {
         let node = document.createElement('tr');
         node.setAttribute('id', element);
-        fields.forEach(e => {
-            if(e === 'PLAYER') node.innerHTML += `<td>${element}</td>`
+        fields.forEach(field => {
+            if(field === 'PLAYER') node.innerHTML += `<td>${element}</td>`
             else node.innerHTML += `<td>...</td>`
         })
         table.appendChild(node);
@@ -69,10 +69,26 @@ window.players.update('updatePlayer', (data) => {
         playerRow.innerHTML += `<td>${fieldContent}</td>`
     })
     sortTable("main-table");
+});
+
+window.players.add('addPlayer', (player) => {
+    let table = document.getElementById("main-table");
+    let node = document.createElement('tr');
+    node.setAttribute('id', player);
+    fields.forEach(e => {
+        if(e === 'PLAYER') node.innerHTML += `<td>${player}</td>`
+        else node.innerHTML += `<td>...</td>`
+    })
+    table.appendChild(node);
+});
+
+window.players.delete('deletePlayer', (player) => {
+    let row = document.getElementById(player);
+    row.parentNode.removeChild(row);
 })
 
-document.getElementById('start-reading').addEventListener('click', async () => {
-    console.log("Button clicked!");
-    await window.reading.start();
-    document.getElementById('start-reading').setAttribute('disabled', 'true');
-});
+// document.getElementById('start-reading').addEventListener('click', async () => {
+//     console.log("Button clicked!");
+//     await window.reading.start();
+//     document.getElementById('start-reading').setAttribute('disabled', 'true');
+// });

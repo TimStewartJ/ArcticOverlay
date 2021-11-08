@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 
 let uuidCache = {};
+let nickCache = {};
 
 ratio = (top, bottom) => {
     return (top/bottom).toFixed(2);
@@ -28,13 +29,17 @@ exports.fetchPlayer = (player, key) => {
     return new Promise( resolve => {
         let lookup = ""
         if(uuidCache[player]) lookup = `uuid=${uuidCache[player]}`
+        else if(nickCache[player]) resolve({nick: true, user: player});
         else lookup = `name=${player}`
         fetch(`https://api.hypixel.net/player?key=${key}&${lookup}`)
         .then(res => res.json()).catch(err => resolve({error: true, reason: err, user: player}))
         .then(data => {
             if(data.throttle) resolve({error: true, reason: 'throttle', user: player});
             else if(data.success == false) resolve({error: true, reason: data.cause, user: player});
-            else if(!data.player) resolve({nick: true, user: player});
+            else if(!data.player) {
+                nickCache[player] = true;
+                resolve({nick: true, user: player});
+            }
             else {
                 uuidCache[player] = data.player.uuid;
                 let bedwars = data.player.stats ? data.player.stats.Bedwars || {} : {}

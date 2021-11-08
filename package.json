@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "node-fetch": "^2.6.6"
+    "node-fetch": "^2.6.6",
+    "node-key-sender": "^1.0.11"
   },
   "devDependencies": {
     "always-tail": "^0.2.0",
