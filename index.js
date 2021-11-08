@@ -18,8 +18,10 @@ app.on('ready', () => {
     let path = app.getPath("home").replace(/\\/g, "\/") + "/.lunarclient/offline/1.8/logs/latest.log";
     write("path", path);
 
+    readFromFile(read("path"), win);
+
     ipcMain.handle('reading:start', () => {
-        readFromFile(read("path"), win);
+        //readFromFile(read("path"), win);
     });
 })
 

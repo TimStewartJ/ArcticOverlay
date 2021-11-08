@@ -1,4 +1,14 @@
 exports.readFromFile = (path, win) => {
+    // this is where the latest.log is read
+    // currently, we use fs's watchfile to watch with a 20ms interval and grab the last line using read-last-lines
+    // this is the fastest method so far, but further experimentation is required
+    // the package `tail` does not work on windows as far as i can tell
+    // the package `always-tail` works but is not very fast
+
+    const fs = require("fs");
+
+    const rll = require('read-last-lines');
+
     // const { Tail } = require('tail');
 
     // let options = {encoding: "ansi" };
@@ -11,12 +21,19 @@ exports.readFromFile = (path, win) => {
 
     console.log("reading ready");
 
-    tail.on("line", (data) => {
-        console.log(data);
-        if (data.includes(" ONLINE: ")) {
-            let players = data.split(" [CHAT] ONLINE: ")[1].split(", ")
-            players.forEach((player) => console.log(player));
-            win.webContents.send('showplayers', players);
-        }
+    // tail.on("line", (data) => {
+    //     if (data.includes(" ONLINE: ")) {
+    //         let players = data.split(" [CHAT] ONLINE: ")[1].split(", ")
+    //         win.webContents.send('showplayers', players);
+    //     }
+    // });
+
+    fs.watchFile(path, {interval: 20}, () => {
+        rll.read(path, 1).then((line) => {
+            if (line.includes(" ONLINE: ")) {
+                let players = line.split(" [CHAT] ONLINE: ")[1].split(", ")
+                win.webContents.send('showplayers', players);
+            }
+        });
     });
 }
