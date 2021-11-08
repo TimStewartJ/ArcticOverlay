@@ -5,5 +5,7 @@ contextBridge.exposeInMainWorld('reading', {
 });
 
 contextBridge.exposeInMainWorld('players', {
-    display: (event, func) => ipcRenderer.on('showplayers', (event, data) => func(data))
+    display: (event, func) => ipcRenderer.on('showPlayers', (event, data) => func(data)),
+    add: (event, func) => ipcRenderer.on('addPlayer', (event, data) => func(data)),
+    update: (event, func) => ipcRenderer.on('updatePlayer', (event, data) => func(data))
 });

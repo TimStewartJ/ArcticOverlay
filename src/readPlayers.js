@@ -28,15 +28,17 @@ exports.readFromFile = (path, win, key) => {
     //     }
     // });
 
-    const fetch = require('node-fetch')
+    const { fetchPlayer } = require('./fetchPlayers.js');
 
     fs.watchFile(path, {interval: 20}, () => {
         rll.read(path, 1).then((line) => {
             if (line.includes(" ONLINE: ")) {
                 let players = line.split(" [CHAT] ONLINE: ")[1].split(", ")
-                win.webContents.send('showplayers', players);
-                players.forEach( (player) => {
-                    fetch(`https://api.hypixel.net/player?key=${key}&name=${player}`).then(res => res.json()).then(data => console.log(data['player']['playername']));
+                win.webContents.send('showPlayers', players);
+                players.forEach( async (player) => {
+                    let playerData = await fetchPlayer(player, key);
+                    if(!playerData.error) win.webContents.send('updatePlayer', playerData);
+                    else console.log(playerData);
                 })
             }
         });
