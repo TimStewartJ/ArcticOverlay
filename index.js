@@ -3,6 +3,9 @@ const { write, read } = require('./src/settings.js');
 const pathjs = require('path');
 const { readFromFile } = require('./src/readPlayers.js');
 const { paths } = require('./data.json');
+try {
+	require('electron-reloader')(module);
+} catch {}
 
 app.on('ready', () => {
     // init the window and set it to load from index.html
