@@ -35,31 +35,40 @@ const sortTable = (tableName) => {
 window.players.display('showPlayers', (data) => {
     let table = document.getElementById("main-table");
     table.innerHTML = ''; // reset table
+    // create the header row and add the field titles to it
     let headrow = document.createElement('tr');
     fields.forEach(field => {
         headrow.innerHTML += `<th>${field}</th>`;
     })
     table.appendChild(headrow);
 
-    data.forEach(element => {
+    
+    data.forEach(player => { // for each player, create a row and populate each field with ...
         let node = document.createElement('tr');
-        node.setAttribute('id', element);
+        node.setAttribute('id', player);
         fields.forEach(field => {
-            if(field === 'PLAYER') node.innerHTML += `<td>${element}</td>`
+            if(field === 'PLAYER') node.innerHTML += `<td>${player}</td>`
             else node.innerHTML += `<td>...</td>`
-        })
+        });
         table.appendChild(node);
     });
 })
 
 window.players.update('updatePlayer', (data) => {
-    let playerRow = document.getElementById(data.user);
-    playerRow.innerHTML = '';
+    let playerRow = document.getElementById(data.user); // find the player row
+    playerRow.innerHTML = ''; // reset the player row's data
+
+    //if the player is not a nick, color them according to their threat level
+    if(!data.nick) {
+        let rgb = data.stats.bedwars.overall.color;
+        $(`#${data.user}`).css('color', `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`)
+    }
+    // populate each field with the necessary data
     fields.forEach(field => {
         let fieldContent;
         switch(field.toLowerCase()) {
             case "player":
-                fieldContent = `[${data.nick ? "nick" : Math.trunc(data.stats.bedwars.overall.stars)}] ${data.user}`;
+                fieldContent = `${data.nick ? "NICK:" + data.user: `${data.coloredstar} ${data.displayName}`}`;
                 break;
             case "tag":
                 fieldContent = data.nick ? "NICK" : "";
@@ -70,13 +79,15 @@ window.players.update('updatePlayer', (data) => {
         }
         playerRow.innerHTML += `<td>${fieldContent}</td>`
     })
-    sortTable("main-table");
+    sortTable("main-table"); // re sort the table
 });
 
 window.players.add('addPlayer', (player) => {
     let table = document.getElementById("main-table");
-    let node = document.createElement('tr');
+    let node = document.createElement('tr'); // create a new row for the player
     node.setAttribute('id', player);
+
+    // populate it with the default ...
     fields.forEach(e => {
         if(e === 'PLAYER') node.innerHTML += `<td>${player}</td>`
         else node.innerHTML += `<td>...</td>`
@@ -85,8 +96,9 @@ window.players.add('addPlayer', (player) => {
 });
 
 window.players.delete('deletePlayer', (player) => {
+    // find the row corresponding to the player, and if it exists, delete it
     let row = document.getElementById(player);
-    row.parentNode.removeChild(row);
+    if(row) row.parentNode.removeChild(row);
 })
 
 // settings functions
@@ -109,9 +121,11 @@ let settingsClicked = false;
 $("#settings-button").click(() => {
     if(settingsClicked) {
         $("#settings-button").removeClass("clicked");
+        $("#settings-button").css("transform","rotate(0deg)");
     }
     else {
         $("#settings-button").addClass("clicked");
+        $("#settings-button").css("transform","rotate(180deg)");
     }
     settingsClicked = !settingsClicked;
 })

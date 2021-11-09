@@ -1,3 +1,10 @@
+@font-face {
+    font-family: "MinecraftRegular";
+    src: url("assets/fonts/MinecraftRegular.otf");
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     background-color: #2d3354;
     color: #7593b9; 
@@ -16,19 +23,34 @@ header {
     padding: 5px;
 }
 
+#main-table {
+    font-family: "MinecraftRegular";
+}
+
+#notice-text {
+    color: red;
+}
+
 #settings-button {
+    transition: all 1s;
+    font-size: 3em;
+    /* transform: rotate(0deg); */
+}
+
+#settings-button-container {
     margin: auto 0 auto auto;
     cursor: pointer;
     transition: all 1s;
-    font-size: 3em;
 }
 
-#settings-button:hover {
-    transform: rotate(180deg);
+#settings-button-container:hover {
+    transform: scale(110%);
 }
 
 .clicked {
+    /* transition: all 1s; */
     color: white;
+    /* transform: rotate(180deg); */
 }
 
 td, th {
