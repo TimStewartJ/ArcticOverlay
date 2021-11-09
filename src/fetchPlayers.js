@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { color, ratio, getBwFormattedLevel, getBwLevel, mcColor, getRank, getRankColor, getFormattedRank, getPlusColor } = require('./util.js');
+const { color, ratio, getBwFormattedLevel, getBwLevel, mcColor, getRank, getFormattedRank, getPlusColor } = require('./util.js');
 
 let uuidCache = {};
 let nickCache = {};
@@ -46,7 +46,7 @@ exports.fetchPlayer = (player, key) => {
                                 ws: bedwars.winstreak || 0,
                                 fkdr: ratio(bedwars.final_kills_bedwars || 0, bedwars.final_deaths_bedwars || 0),
                                 wlr: ratio(bedwars.wins_bedwars || 0, bedwars.losses_bedwars || 0),
-                                color: color(650, 0, stars*Math.sqrt(ratio(bedwars.final_kills_bedwars || 0, bedwars.final_deaths_bedwars || 0))),
+                                color: color(650, 0, stars*Math.pow(ratio(bedwars.final_kills_bedwars || 0, bedwars.final_deaths_bedwars || 0), 2)),
                             }
                         }
                     }

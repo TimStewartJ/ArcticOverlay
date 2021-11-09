@@ -9,7 +9,7 @@ body {
     background-color: #2d3354;
     color: #7593b9; 
     /* #506184*/
-    font-family: "utopia-std";
+    font-family: "Roboto";
 }
 
 header {
@@ -20,7 +20,16 @@ header {
     border-style: solid;
     border-color: #506184;
     border-width: 0.25em;
+    border-radius: 1em;
     padding: 5px;
+    height: 4em;
+}
+
+header h1 {
+    margin: auto 0.25em auto 0.25em;
+    font-family: "Mohave";
+    font-size: 3em;
+    vertical-align: middle;
 }
 
 #main-table {
@@ -38,7 +47,7 @@ header {
 }
 
 #settings-button-container {
-    margin: auto 0 auto auto;
+    margin: auto 0.25em auto auto;
     cursor: pointer;
     transition: all 1s;
 }
@@ -60,6 +69,10 @@ td, th {
 
 th {
     padding-top: 5px;
+}
+
+.nick {
+    color: red;
 }
 
 #settings {

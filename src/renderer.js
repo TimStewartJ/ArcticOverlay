@@ -63,12 +63,15 @@ window.players.update('updatePlayer', (data) => {
         let rgb = data.stats.bedwars.overall.color;
         $(`#${data.user}`).css('color', `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`)
     }
+    else {
+        playerRow.classList.add("nick");
+    }
     // populate each field with the necessary data
     fields.forEach(field => {
         let fieldContent;
         switch(field.toLowerCase()) {
             case "player":
-                fieldContent = `${data.nick ? "NICK:" + data.user: `${data.coloredstar} ${data.displayName}`}`;
+                fieldContent = `${data.nick ? `${data.user}` : `${data.coloredstar} ${data.displayName}`}`;
                 break;
             case "tag":
                 fieldContent = data.nick ? "NICK" : "";
