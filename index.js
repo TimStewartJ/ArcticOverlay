@@ -16,6 +16,8 @@ app.on('ready', () => {
 
     win.loadFile('index.html');
 
+    win.removeMenu();
+
     // manually setting the path for log reading to lunar client's for now...
     let path = app.getPath("home").replace(/\\/g, "\/") + "/.lunarclient/offline/1.8/logs/latest.log";
     write("path", path);
@@ -26,6 +28,10 @@ app.on('ready', () => {
     // this is triggered when the read from file button is pressed on front end
     ipcMain.handle('reading:start', () => {
         //readFromFile(read("path"), win);
+    });
+
+    ipcMain.on('clientSelect', (e, data) => {
+        
     });
 })
 

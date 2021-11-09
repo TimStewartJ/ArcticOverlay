@@ -87,6 +87,10 @@ window.players.delete('deletePlayer', (player) => {
     row.parentNode.removeChild(row);
 })
 
+document.getElementById('client-select').addEventListener('change', async () => {
+    await window.settings.clientSelect($('#client-select :selected').val());
+})
+
 // document.getElementById('start-reading').addEventListener('click', async () => {
 //     console.log("Button clicked!");
 //     await window.reading.start();

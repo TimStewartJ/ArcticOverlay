@@ -51,8 +51,8 @@ exports.fetchPlayer = (player, key) => {
                             overall: {
                                 stars: getBwLevel(bedwars.Experience || 0),
                                 ws: bedwars.winstreak || 0,
-                                fkdr: ratio(bedwars.final_kills_bedwars, bedwars.final_deaths_bedwars),
-                                wlr: ratio(bedwars.wins_bedwars, bedwars.losses_bedwars),
+                                fkdr: ratio(bedwars.final_kills_bedwars || 0, bedwars.final_deaths_bedwars || 0),
+                                wlr: ratio(bedwars.wins_bedwars || 0, bedwars.losses_bedwars || 0),
                             }
                         }
                     }
