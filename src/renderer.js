@@ -93,6 +93,7 @@ window.players.delete('deletePlayer', (player) => {
 
 window.settings.initSettings('initSettings', (settings) => {
     $(`#${settings.client}`).prop('selected', true);
+    $("#autowho").prop('checked', settings.autowho);
 })
 
 window.settings.invalidKey('invalidKey', () => {
@@ -120,5 +121,5 @@ $("#client-select").change(async () => {
 })
 
 $("#autowho").change(async (data) => {
-    console.log(data);
+    await window.settings.autowhoToggle(data.target.checked);
 })

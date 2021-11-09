@@ -35,21 +35,29 @@ app.on('ready', () => {
     if(!read("client")) {
         clientSelect("lunar");
     }
+    if(!read("autowho")) {
+        write("autowho", true)
+    }
 
     win.webContents.once('dom-ready', () => {
         win.webContents.send('initSettings', {
             path: read("path"),
-            client: read("client")
+            client: read("client"),
+            autowho: read("autowho")
         })
         // start reading from the file immediately
         readFromFile(read("path"), win, read("key"));
     })
-    
-    
+
+    // listen for settings changes
 
     ipcMain.on('clientSelect', (e, data) => {
         clientSelect(data);
     });
+
+    ipcMain.on('autowhoToggle', (e, data) => {
+        write("autowho", data);
+    })
 })
 
 app.on('window-all-closed', () => {

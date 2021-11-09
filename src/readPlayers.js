@@ -72,7 +72,7 @@ exports.readFromFile = (path, win) => {
             }
             else if (/has (joined \(\d+\/\d+\)|quit)!/.test(line)) {
                 if (line.includes(" has joined ")) {
-                    if(!autowho) {
+                    if(read("autowho") && !autowho) {
                         ks.startBatch()
                         .batchTypeKey('control') // We send these keys before because they can often interfere with `/who` if they were already pressed down. Might (try) to make this configurable (somehow) if enough people use different layouts for it to matter.
                         .batchTypeKey('w')

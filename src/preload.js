@@ -4,6 +4,7 @@ contextBridge.exposeInMainWorld('settings', {
     initSettings: (event, func) => ipcRenderer.once('initSettings', (event, data) => func(data)),
     invalidKey: (event, func) => ipcRenderer.on('invalidKey', (event, data) => func()),
     validKey: (event, func) => ipcRenderer.on('validKey', (event, data) => func()),
+    autowhoToggle: (data) => ipcRenderer.send('autowhoToggle', data),
     clientSelect: (data) => ipcRenderer.send('clientSelect', data),
 });
 
