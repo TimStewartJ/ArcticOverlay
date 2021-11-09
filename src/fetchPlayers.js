@@ -25,6 +25,13 @@ const getBwLevel = (exp = 0) => {
     return parseFloat((level + (remainingExp / 5000)).toFixed(2))
 }
 
+exports.validKey = (key) => {
+    return new Promise( resolve => {
+        fetch(`https://api.hypixel.net/key?key=${key}`).then(res=> res.json()).catch(err => resolve({success: false}))
+        .then(data => resolve(data.success));
+    });
+}
+
 exports.fetchPlayer = (player, key) => {
     return new Promise( resolve => {
         let lookup = ""

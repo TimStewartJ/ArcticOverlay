@@ -4,14 +4,36 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Artic Overlay</title>
+  <title>Arctic Overlay</title>
+
+  <!-- load jquery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <!-- load google fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Mono:wght@300&display=swap" rel="stylesheet"> 
+
+  <!-- load font awesome -->
+  <script src="https://kit.fontawesome.com/c20de8d6f8.js" crossorigin="anonymous"></script>
+
+  <!-- load adobe fonts -->
+  <link rel="stylesheet" href="https://use.typekit.net/yav3fwc.css"/>
+
+  <!-- load our custom css -->
+  <link rel="stylesheet" href="styles.css" />
+  
 </head>
 
 <header>
+  <h1 id="title">Arctic Overlay</h1>
 
+  <i id="settings-button"class="fas fa-cog"></i>
 </header>
 
 <body>
+  <div id="notice">
+    <h2 id="notice-text"></h2>
+  </div>
+
   <table id="main-table">
     <tr>
       <th>PLAYER</th>
@@ -29,9 +51,20 @@
 
   </div>
 
-  <!-- <button id="start-reading">Start reading log</button> -->
+  <div id="settings">
+    <label for="client-select">Choose a client:</label>
+    <select name="client-select" id="client-select">
+      <option value="lunar" id="lunar">Lunar Client</option>
+      <option value="vanilla" id="vanilla">Vanilla/Labymod</option>
+    </select>
 
+    <label for="autowho">Autowho</label>
+    <input type="checkbox" id="autowho" name="autowho"/>
+  </div>
+
+  <!-- <button id="start-reading">Start reading log</button> -->
   <script src="src/renderer.js"></script>
+  
 </body>
 
 </html>

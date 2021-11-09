@@ -1,13 +1,16 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, globalShortcut } = require('electron');
 const { write, read } = require('./src/settings.js');
 const pathjs = require('path');
 const { readFromFile } = require('./src/readPlayers.js');
+const { paths } = require('./data.json');
 
 app.on('ready', () => {
     // init the window and set it to load from index.html
     const win = new BrowserWindow({
         width: 1000,
         height: 800,
+        minWidth: 500,
+        minHeight: 100,
         webPreferences: {
             nodeIntegration: true,
             preload: pathjs.join(__dirname, 'src/preload.js')
@@ -18,20 +21,34 @@ app.on('ready', () => {
 
     win.removeMenu();
 
-    // manually setting the path for log reading to lunar client's for now...
-    let path = app.getPath("home").replace(/\\/g, "\/") + "/.lunarclient/offline/1.8/logs/latest.log";
-    write("path", path);
+    globalShortcut.register('f5', () => {
+        win.reload();
+    })
 
-    // start reading from the file immediately
-    readFromFile(read("path"), win, read("key"));
+    win.webContents.openDevTools();
 
-    // this is triggered when the read from file button is pressed on front end
-    ipcMain.handle('reading:start', () => {
-        //readFromFile(read("path"), win);
-    });
+    const clientSelect = (client) => {
+        write("path", app.getPath("home").replace(/\\/g, "\/") + paths[`${client}-${process.platform}`] + "/logs/latest.log");
+        write("client", client);
+    }
+
+    if(!read("client")) {
+        clientSelect("lunar");
+    }
+
+    win.webContents.once('dom-ready', () => {
+        win.webContents.send('initSettings', {
+            path: read("path"),
+            client: read("client")
+        })
+        // start reading from the file immediately
+        readFromFile(read("path"), win, read("key"));
+    })
+    
+    
 
     ipcMain.on('clientSelect', (e, data) => {
-        
+        clientSelect(data);
     });
 })
 

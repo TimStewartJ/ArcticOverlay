@@ -1,10 +1,9 @@
-const { contextBridge, ipcRenderer } = require('electron')
-
-contextBridge.exposeInMainWorld('reading', {
-    start: () => ipcRenderer.invoke('reading:start')
-});
+const { contextBridge, ipcRenderer, ipcMain } = require('electron')
 
 contextBridge.exposeInMainWorld('settings', {
+    initSettings: (event, func) => ipcRenderer.once('initSettings', (event, data) => func(data)),
+    invalidKey: (event, func) => ipcRenderer.on('invalidKey', (event, data) => func()),
+    validKey: (event, func) => ipcRenderer.on('validKey', (event, data) => func()),
     clientSelect: (data) => ipcRenderer.send('clientSelect', data),
 });
 

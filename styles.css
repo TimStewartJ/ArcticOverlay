@@ -1,0 +1,46 @@
+body {
+    background-color: #2d3354;
+    color: #7593b9; 
+    /* #506184*/
+    font-family: "utopia-std";
+}
+
+header {
+    /* position: fixed; */
+    top: 0;
+    display: flex;
+    flex-direction: row;
+    border-style: solid;
+    border-color: #506184;
+    border-width: 0.25em;
+    padding: 5px;
+}
+
+#settings-button {
+    margin: auto 0 auto auto;
+    cursor: pointer;
+    transition: all 1s;
+    font-size: 3em;
+}
+
+#settings-button:hover {
+    transform: rotate(180deg);
+}
+
+.clicked {
+    color: white;
+}
+
+td, th {
+    padding: 1px;
+    padding-right: 20px;
+}
+
+th {
+    padding-top: 5px;
+}
+
+#settings {
+    margin-top: 50px;
+}
+

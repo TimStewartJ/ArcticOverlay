@@ -1,7 +1,7 @@
 {
-  "name": "overlay",
+  "name": "arctic-overlay",
   "version": "1.0.0",
-  "description": "Overlay",
+  "description": "An overlay for Hypixel Bedwars",
   "main": "index.js",
   "scripts": {
     "start": "electron .",
@@ -21,9 +21,12 @@
     "read-last-lines": "^1.8.0"
   },
   "build": {
-    "appId": "com.artic.articoverlay",
+    "appId": "com.arctic.arcticoverlay",
     "win": {
       "target": "nsis"
+    },
+    "mac": {
+      "category": "public.app-category.entertainment"
     }
   }
 }

@@ -1,6 +1,6 @@
+const { read, write } = require('./settings');
 
-
-exports.readFromFile = (path, win, key) => {
+exports.readFromFile = (path, win) => {
     // this is where the latest.log is read
     // we used to use fs's watchfile to watch with a 20ms interval and grab the last line using read-last-lines
     // because multiple lines could be written in the same moment, we now manually read off the newest bytes with fs
@@ -8,9 +8,11 @@ exports.readFromFile = (path, win, key) => {
     // the package `always-tail` works but is not very fast
 
     const fetchAndUpdatePlayer = async (player) => {
-        let playerData = await fetchPlayer(player, key);
-        if(!playerData.error) win.webContents.send('updatePlayer', playerData);
-        else console.log(playerData);
+        if(key) {
+            let playerData = await fetchPlayer(player, key);
+            if(!playerData.error) win.webContents.send('updatePlayer', playerData);
+            else console.log(playerData);
+        }
     }
 
     const buffSize = 2056;
@@ -26,7 +28,13 @@ exports.readFromFile = (path, win, key) => {
     const ks = require('node-key-sender');
     ks.setOption('startDelayMillisec', 25);
 
-    const { fetchPlayer } = require('./fetchPlayers.js');
+    const { fetchPlayer, validKey } = require('./fetchPlayers.js');
+
+    let key = read("key");
+    
+    if(!key || !validKey(key)) {
+        win.webContents.send('invalidKey');
+    }
 
     let autowho = false;
 
@@ -51,8 +59,8 @@ exports.readFromFile = (path, win, key) => {
         // });
     });
 
-    const process = (line) => {
-        //console.log(line);
+    const process = async (line) => {
+        // console.log(line);
         if(/.*\[CHAT\] (ONLINE:)?(\w| |\(|\/|\)|,|!|\[|\]|\+)+/.test(line)) { // this particular regex will prevent anything said by a player from getting futher
             console.log("LEGIT LINE: " + line);
             if(line.includes(" ONLINE: ")) {
@@ -88,6 +96,11 @@ exports.readFromFile = (path, win, key) => {
             }
             else if (line.includes("Sending you to mini")) {
                 autowho = false;
+            }
+            else if (line.includes("Your new API key is ")) {
+                key = line.split("[CHAT] Your new API key is ")[1];
+                write("key", key);
+                if(await validKey(key)) win.webContents.send("validKey");
             }
         }
     }

@@ -1,0 +1,8 @@
+{
+    "paths": {
+        "lunar-win32" : "/.lunarclient/offline/1.8",
+        "vanilla-win32" : "/AppData/Roaming/.minecraft",
+        "lunar-darwin" : "/.lunarclient/offline/1.8",
+        "vanilla-darwin" : "/Library/Application Support/minecraft"
+    }
+}

@@ -30,6 +30,8 @@ const sortTable = (tableName) => {
     }
 }
 
+// table updating functions from main
+
 window.players.display('showPlayers', (data) => {
     let table = document.getElementById("main-table");
     table.innerHTML = ''; // reset table
@@ -87,12 +89,36 @@ window.players.delete('deletePlayer', (player) => {
     row.parentNode.removeChild(row);
 })
 
-document.getElementById('client-select').addEventListener('change', async () => {
+// settings functions
+
+window.settings.initSettings('initSettings', (settings) => {
+    $(`#${settings.client}`).prop('selected', true);
+})
+
+window.settings.invalidKey('invalidKey', () => {
+    $('#notice-text').text("INVALID KEY");
+})
+
+window.settings.validKey('validKey', () => {
+    $('#notice-text').text("");
+})
+
+let settingsClicked = false;
+
+$("#settings-button").click(() => {
+    if(settingsClicked) {
+        $("#settings-button").removeClass("clicked");
+    }
+    else {
+        $("#settings-button").addClass("clicked");
+    }
+    settingsClicked = !settingsClicked;
+})
+
+$("#client-select").change(async () => {
     await window.settings.clientSelect($('#client-select :selected').val());
 })
 
-// document.getElementById('start-reading').addEventListener('click', async () => {
-//     console.log("Button clicked!");
-//     await window.reading.start();
-//     document.getElementById('start-reading').setAttribute('disabled', 'true');
-// });
+$("#autowho").change(async (data) => {
+    console.log(data);
+})
