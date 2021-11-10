@@ -227,7 +227,7 @@ exports.getPlusColor = (rank, plus) => {
             'VIP+': { mc: '§6', hex: '#FFAA00' },
             'PIG+++': { mc: '§b', hex: '#FF55FF' },
         }[rank];
-        if (!rankColor) return { mc: '§7', hex: '#BAB6B6' };
+        return rankColor ? rankColor : { mc: '§7', hex: '#BAB6B6' };
     } else {
         const rankColorMC = {
             RED: { mc: '§c', hex: '#FF5555' },
@@ -245,9 +245,8 @@ exports.getPlusColor = (rank, plus) => {
             BLACK: { mc: '§0', hex: '#000000' },
             DARK_BLUE: { mc: '§1', hex: '#0000AA' },
         }[plus];
-        if (!rankColorMC) return { mc: '§7', hex: '#BAB6B6' };
+        return rankColorMC ? rankColorMC : { mc: '§7', hex: '#BAB6B6' };
     }
-    return rankColor || rankColorMC;
 };
 
 exports.getFormattedRank = (rank, color) => {

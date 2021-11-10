@@ -6,8 +6,8 @@
 }
 
 body {
-    background-color: #2d3354;
-    color: #7593b9; 
+    background-color: #daf0ee;
+    color: #3b413c; 
     /* #506184*/
     font-family: "Roboto";
 }
@@ -17,10 +17,11 @@ header {
     top: 0;
     display: flex;
     flex-direction: row;
+    color: #94d1be; /*
     border-style: solid;
-    border-color: #506184;
+    border-color: #9db5b2;
     border-width: 0.25em;
-    border-radius: 1em;
+    border-radius: 1em;*/
     padding: 5px;
     height: 4em;
 }
@@ -34,6 +35,16 @@ header h1 {
 
 #main-table {
     font-family: "MinecraftRegular";
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #daf0ee;
+    border-radius: 0.5em;
+    padding: 0.25em;
+}
+
+#main-table th {
+    /* text-align: center; */
+    padding-left: 1em;
+    padding-right: 1em;
 }
 
 #notice-text {
@@ -60,15 +71,6 @@ header h1 {
     /* transition: all 1s; */
     color: white;
     /* transform: rotate(180deg); */
-}
-
-td, th {
-    padding: 1px;
-    padding-right: 20px;
-}
-
-th {
-    padding-top: 5px;
 }
 
 .nick {
