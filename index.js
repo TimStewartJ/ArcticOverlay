@@ -4,7 +4,7 @@ const pathjs = require('path');
 const { readFromFile } = require('./src/readPlayers.js');
 const { paths } = require('./data.json');
 try {
-	require('electron-reloader')(module);
+    require('electron-reloader')(module);
 } catch {}
 
 app.on('ready', () => {
@@ -26,20 +26,20 @@ app.on('ready', () => {
 
     globalShortcut.register('f5', () => {
         win.reload();
-    })
+    });
 
     win.webContents.openDevTools();
 
     const clientSelect = (client) => {
         write("path", app.getPath("home").replace(/\\/g, "\/") + paths[`${client}-${process.platform}`] + "/logs/latest.log");
         write("client", client);
-    }
+    };
 
     if(!read("client")) {
         clientSelect("lunar");
     }
     if(!read("autowho")) {
-        write("autowho", true)
+        write("autowho", true);
     }
 
     win.webContents.once('dom-ready', () => {
@@ -47,10 +47,10 @@ app.on('ready', () => {
             path: read("path"),
             client: read("client"),
             autowho: read("autowho")
-        })
+        });
         // start reading from the file immediately
         readFromFile(read("path"), win, read("key"));
-    })
+    });
 
     // listen for settings changes
 
@@ -60,11 +60,11 @@ app.on('ready', () => {
 
     ipcMain.on('autowhoToggle', (e, data) => {
         write("autowho", data);
-    })
-})
+    });
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-      app.quit()
+        app.quit();
     }
 });

@@ -14,7 +14,7 @@ exports.readFromFile = async (path, win) => {
             if(!playerData.error) win.webContents.send('updatePlayer', playerData);
             else console.log(player + " " + playerData);
         }
-    }
+    };
 
     const buffSize = 2056;
 
@@ -47,6 +47,7 @@ exports.readFromFile = async (path, win) => {
     let logData = fs.statSync(path);
     let filesize = logData.size;
 
+    
     let file;
     fs.open(path, 'r', (err, fd) => {
         file = fd;
@@ -58,7 +59,7 @@ exports.readFromFile = async (path, win) => {
             filesize += bytecount;
             const lines = buff.toString().split(/\r?\n/).slice(0, -1);
             lines.forEach(line => process(line));
-        })
+        });
 
         // rll.read(path, 1).then((line) => {
         //     process(line);
@@ -70,7 +71,7 @@ exports.readFromFile = async (path, win) => {
         if(/.*\[CHAT\] (ONLINE:)?(\w| |\(|\/|\)|,|!|\[|\]|\+)+/.test(line)) { // this particular regex will prevent anything said by a player from getting futher
             // console.log("LEGIT LINE: " + line);
             if(line.includes(" ONLINE: ")) { // case for /who
-                let players = line.split(" [CHAT] ONLINE: ")[1].split(", ")
+                let players = line.split(" [CHAT] ONLINE: ")[1].split(", ");
                 win.webContents.send('showPlayers', players);
                 players.forEach( async (player) => {
                     fetchAndUpdatePlayer(player);
@@ -80,23 +81,23 @@ exports.readFromFile = async (path, win) => {
                 if (line.includes(" has joined ")) { // case for someone joining the lobby
                     if(read("autowho") && !autowho) {
                         ks.startBatch()
-                        .batchTypeKey('control') // We send these keys before because they can often interfere with `/who` if they were already pressed down. Might (try) to make this configurable (somehow) if enough people use different layouts for it to matter.
-                        .batchTypeKey('w')
-                        .batchTypeKey('a')
-                        .batchTypeKey('s')
-                        .batchTypeKey('d')
-                        .batchTypeKey('space')
-                        .batchTypeKey('slash', 50)
-                        .batchTypeKeys(['w','h','o','enter'])
-                        .sendBatch();
+                            .batchTypeKey('control') // We send these keys before because they can often interfere with `/who` if they were already pressed down. Might (try) to make this configurable (somehow) if enough people use different layouts for it to matter.
+                            .batchTypeKey('w')
+                            .batchTypeKey('a')
+                            .batchTypeKey('s')
+                            .batchTypeKey('d')
+                            .batchTypeKey('space')
+                            .batchTypeKey('slash', 50)
+                            .batchTypeKeys(['w','h','o','enter'])
+                            .sendBatch();
                         autowho = true;
                     }
-                    let player = line.split(" [CHAT] ")[1].split(" has joined")[0]
+                    let player = line.split(" [CHAT] ")[1].split(" has joined")[0];
                     win.webContents.send('addPlayer', player);
                     fetchAndUpdatePlayer(player);
                 }
                 else if (line.includes(" has quit!")) { // case for someone quiting the lobby
-                    let player = line.split(" [CHAT] ")[1].split(" has quit!")[0]
+                    let player = line.split(" [CHAT] ")[1].split(" has quit!")[0];
                     win.webContents.send('deletePlayer', player);
                 }
             }
@@ -110,5 +111,5 @@ exports.readFromFile = async (path, win) => {
                 if(await validKey(key)) win.webContents.send("validKey");
             }
         }
-    }
-}
+    };
+};

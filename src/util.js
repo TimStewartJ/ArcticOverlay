@@ -53,11 +53,11 @@ const colors = {
 
 // function to convert mc colors into something usable via html
 exports.mcColor = (text, size = 16, hd = false) => {
-    var finalText = "";
+    let finalText = "";
     splitText = text.split("§").slice(1);
 
     splitText.forEach((parts, index) => {
-        var color = "";
+        let color = "";
 
         if (parts[0] == "#" && parts[1] == "#") {
             const hex = `#${parts[2]}${parts[3]}${parts[4]}${parts[5]}${parts[6]}${parts[7]}`;
@@ -221,7 +221,7 @@ exports.getRank = (json) => {
 
 exports.getPlusColor = (rank, plus) => {
     if (plus == undefined || rank == "PIG+++") {
-        var rankColor = {
+        const rankColor = {
             "MVP+": { mc: "§c", hex: "#FF5555" },
             "MVP++": { mc: "§c", hex: "#FFAA00" },
             "VIP+": { mc: "§6", hex: "#FFAA00" },
@@ -229,7 +229,7 @@ exports.getPlusColor = (rank, plus) => {
         }[rank];
         if (!rankColor) return { mc: "§7", hex: "#BAB6B6" };
     } else {
-        var rankColorMC = {
+        const rankColorMC = {
             RED: { mc: "§c", hex: "#FF5555" },
             GOLD: { mc: "§6", hex: "#FFAA00" },
             GREEN: { mc: "§a", hex: "#55FF55" },

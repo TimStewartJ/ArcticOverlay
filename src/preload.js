@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer, ipcMain } = require('electron')
+const { contextBridge, ipcRenderer, ipcMain } = require('electron');
 
 contextBridge.exposeInMainWorld('settings', {
     initSettings: (event, func) => ipcRenderer.once('initSettings', (event, data) => func(data)),
