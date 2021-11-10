@@ -1,8 +1,8 @@
 const fetch = require('node-fetch');
 const { color, ratio, getBwFormattedLevel, getBwLevel, mcColor, getRank, getFormattedRank, getPlusColor } = require('./util.js');
 
-let uuidCache = {};
-let nickCache = {};
+const uuidCache = {};
+const nickCache = {};
 
 exports.validKey = (key) => {
     return new Promise( resolve => {
@@ -13,7 +13,7 @@ exports.validKey = (key) => {
 
 exports.fetchPlayer = (player, key) => {
     return new Promise( resolve => {
-        let lookup = "";
+        let lookup = '';
         if(uuidCache[player]) lookup = `uuid=${uuidCache[player]}`;
         else if(nickCache[player]) resolve({nick: true, user: player});
         else lookup = `name=${player}`;
@@ -28,11 +28,11 @@ exports.fetchPlayer = (player, key) => {
                 }
                 else {
                     uuidCache[player] = data.player.uuid;
-                    let bedwars = data.player.stats ? data.player.stats.Bedwars || {} : {};
-                    let stars = getBwLevel(bedwars.Experience || 0);
-                    let rank = getRank(data.player);
-                    let plusColor = getPlusColor(rank, data.player.rankPlusColor);
-                    let formattedRank = getFormattedRank(rank, plusColor.mc);
+                    const bedwars = data.player.stats ? data.player.stats.Bedwars || {} : {};
+                    const stars = getBwLevel(bedwars.Experience || 0);
+                    const rank = getRank(data.player);
+                    const plusColor = getPlusColor(rank, data.player.rankPlusColor);
+                    const formattedRank = getFormattedRank(rank, plusColor.mc);
                     resolve({
                         user: player,
                         uuid: data.player.uuid,

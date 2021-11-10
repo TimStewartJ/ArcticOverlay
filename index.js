@@ -31,25 +31,25 @@ app.on('ready', () => {
     win.webContents.openDevTools();
 
     const clientSelect = (client) => {
-        write("path", app.getPath("home").replace(/\\/g, "\/") + paths[`${client}-${process.platform}`] + "/logs/latest.log");
-        write("client", client);
+        write('path', `${app.getPath('home').replace(/\\/g, '\/') + paths[`${client}-${process.platform}`]  }/logs/latest.log`);
+        write('client', client);
     };
 
-    if(!read("client")) {
-        clientSelect("lunar");
+    if(!read('client')) {
+        clientSelect('lunar');
     }
-    if(!read("autowho")) {
-        write("autowho", true);
+    if(!read('autowho')) {
+        write('autowho', true);
     }
 
     win.webContents.once('dom-ready', () => {
         win.webContents.send('initSettings', {
-            path: read("path"),
-            client: read("client"),
-            autowho: read("autowho")
+            path: read('path'),
+            client: read('client'),
+            autowho: read('autowho')
         });
         // start reading from the file immediately
-        readFromFile(read("path"), win, read("key"));
+        readFromFile(read('path'), win, read('key'));
     });
 
     // listen for settings changes
@@ -59,7 +59,7 @@ app.on('ready', () => {
     });
 
     ipcMain.on('autowhoToggle', (e, data) => {
-        write("autowho", data);
+        write('autowho', data);
     });
 });
 

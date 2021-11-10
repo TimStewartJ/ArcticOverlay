@@ -10,15 +10,15 @@ exports.readFromFile = async (path, win) => {
     // this will call upon the api to get the player data and then update it on the front end
     const fetchAndUpdatePlayer = async (player) => {
         if(key) {
-            let playerData = await fetchPlayer(player, key);
+            const playerData = await fetchPlayer(player, key);
             if(!playerData.error) win.webContents.send('updatePlayer', playerData);
-            else console.log(player + " " + playerData);
+            else console.log(`${player  } ${  playerData}`);
         }
     };
 
     const buffSize = 2056;
 
-    const fs = require("fs");
+    const fs = require('fs');
 
     // const rll = require('read-last-lines');
 
@@ -31,7 +31,7 @@ exports.readFromFile = async (path, win) => {
 
     const { fetchPlayer, validKey } = require('./fetchPlayers.js');
 
-    let key = read("key");
+    let key = read('key');
 
     // let test = await validKey(key);
         
@@ -44,7 +44,7 @@ exports.readFromFile = async (path, win) => {
 
     let autowho = false;
 
-    let logData = fs.statSync(path);
+    const logData = fs.statSync(path);
     let filesize = logData.size;
 
     
@@ -70,16 +70,16 @@ exports.readFromFile = async (path, win) => {
         // console.log(line);
         if(/.*\[CHAT\] (ONLINE:)?(\w| |\(|\/|\)|,|!|\[|\]|\+)+/.test(line)) { // this particular regex will prevent anything said by a player from getting futher
             // console.log("LEGIT LINE: " + line);
-            if(line.includes(" ONLINE: ")) { // case for /who
-                let players = line.split(" [CHAT] ONLINE: ")[1].split(", ");
+            if(line.includes(' ONLINE: ')) { // case for /who
+                const players = line.split(' [CHAT] ONLINE: ')[1].split(', ');
                 win.webContents.send('showPlayers', players);
                 players.forEach( async (player) => {
                     fetchAndUpdatePlayer(player);
                 });
             }
             else if (/has (joined \(\d+\/\d+\)|quit)!/.test(line)) {
-                if (line.includes(" has joined ")) { // case for someone joining the lobby
-                    if(read("autowho") && !autowho) {
+                if (line.includes(' has joined ')) { // case for someone joining the lobby
+                    if(read('autowho') && !autowho) {
                         ks.startBatch()
                             .batchTypeKey('control') // We send these keys before because they can often interfere with `/who` if they were already pressed down. Might (try) to make this configurable (somehow) if enough people use different layouts for it to matter.
                             .batchTypeKey('w')
@@ -92,23 +92,23 @@ exports.readFromFile = async (path, win) => {
                             .sendBatch();
                         autowho = true;
                     }
-                    let player = line.split(" [CHAT] ")[1].split(" has joined")[0];
+                    const player = line.split(' [CHAT] ')[1].split(' has joined')[0];
                     win.webContents.send('addPlayer', player);
                     fetchAndUpdatePlayer(player);
                 }
-                else if (line.includes(" has quit!")) { // case for someone quiting the lobby
-                    let player = line.split(" [CHAT] ")[1].split(" has quit!")[0];
+                else if (line.includes(' has quit!')) { // case for someone quiting the lobby
+                    const player = line.split(' [CHAT] ')[1].split(' has quit!')[0];
                     win.webContents.send('deletePlayer', player);
                 }
             }
-            else if (line.includes("Sending you to mini")) {
+            else if (line.includes('Sending you to mini')) {
                 win.webContents.send('showPlayers', []); // reset the front end when we join a new lobby
                 autowho = false;
             }
-            else if (line.includes("Your new API key is ")) {
-                key = line.split("[CHAT] Your new API key is ")[1];
-                write("key", key);
-                if(await validKey(key)) win.webContents.send("validKey");
+            else if (line.includes('Your new API key is ')) {
+                key = line.split('[CHAT] Your new API key is ')[1];
+                write('key', key);
+                if(await validKey(key)) win.webContents.send('validKey');
             }
         }
     };
