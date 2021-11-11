@@ -4,6 +4,14 @@ const { color, ratio, getBwFormattedLevel, getBwLevel, mcColor, getRank, getForm
 const uuidCache = {};
 const nickCache = {};
 
+const gameModes = {
+    overall: '',
+    solo: 'eight_one',
+    doubles: 'eight_two',
+    threes: 'four_three',
+    fours: 'four_four',
+};
+
 exports.validKey = (key) => {
     return new Promise( resolve => {
         fetch(`https://api.hypixel.net/key?key=${key}`).then(res=> res.json()).catch(err => resolve(false))
@@ -33,7 +41,8 @@ exports.fetchPlayer = (player, key) => {
                     const rank = getRank(data.player);
                     const plusColor = getPlusColor(rank, data.player.rankPlusColor);
                     const formattedRank = getFormattedRank(rank, plusColor.mc);
-                    resolve({
+
+                    data = {
                         user: player,
                         uuid: data.player.uuid,
                         coloredstar: mcColor(getBwFormattedLevel(Math.trunc(stars))),
@@ -41,16 +50,25 @@ exports.fetchPlayer = (player, key) => {
                         displayName: `${mcColor(`${formattedRank}${player}`)}`,
                         stats: {
                             bedwars: {
-                                overall: {
-                                    stars: stars,
-                                    ws: bedwars.winstreak || 0,
-                                    fkdr: ratio(bedwars.final_kills_bedwars || 0, bedwars.final_deaths_bedwars || 0),
-                                    wlr: ratio(bedwars.wins_bedwars || 0, bedwars.losses_bedwars || 0),
-                                    color: color(650, 0, stars*Math.pow(ratio(bedwars.final_kills_bedwars || 0, bedwars.final_deaths_bedwars || 0), 2)),
-                                }
+                                stars: stars,
                             }
                         }
-                    });
+                    };
+
+                    for(const key in gameModes) {
+                        let val = gameModes[key];
+                        if (key !== 'overall') val+='_'; 
+                        data.stats.bedwars[key] = {
+                            stars: stars,
+                            ws: bedwars[`${val}winstreak`] || 0,
+                            fkdr: ratio(bedwars[`${val}final_kills_bedwars`], bedwars[`${val}final_deaths_bedwars`]),
+                            wlr: ratio(bedwars[`${val}wins_bedwars`], bedwars[`${val}losses_bedwars`]),
+                            bblr: ratio(bedwars[`${val}beds_broken_bedwars`], bedwars[`${val}beds_lost_bedwars`]),
+                            color: color(650, 0, (stars*Math.pow(ratio(bedwars[`${val}final_kills_bedwars`], bedwars[`${val}final_deaths_bedwars`]), 2)/10)),
+                        };
+                    }
+
+                    resolve(data);
                 }
             });
     });

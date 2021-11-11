@@ -41,12 +41,16 @@ app.on('ready', () => {
     if(!read('autowho')) {
         write('autowho', true);
     }
+    if(!read('mode')) {
+        write('mode', 'overall');
+    }
 
     win.webContents.once('dom-ready', () => {
         win.webContents.send('initSettings', {
             path: read('path'),
             client: read('client'),
-            autowho: read('autowho')
+            autowho: read('autowho'),
+            mode: read('mode')
         });
         // start reading from the file immediately
         readFromFile(read('path'), win, read('key'));
@@ -60,6 +64,10 @@ app.on('ready', () => {
 
     ipcMain.on('autowhoToggle', (e, data) => {
         write('autowho', data);
+    });
+
+    ipcMain.on('modeSelect', (e, data) => {
+        write('mode', data);
     });
 });
 

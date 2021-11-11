@@ -1,4 +1,6 @@
-const fields = ['PLAYER','TAG', 'WS', 'FKDR', 'WLR'];
+const fields = ['PLAYER', 'TAG', 'WS', 'FKDR', 'WLR', 'BBLR'];
+
+let mode;
 
 const sortTable = (tableName) => {
     const table = document.getElementById(tableName);
@@ -60,7 +62,7 @@ window.players.update('updatePlayer', (data) => {
 
     //if the player is not a nick, color them according to their threat level
     if(!data.nick) {
-        const rgb = data.stats.bedwars.overall.color;
+        const rgb = data.stats.bedwars[mode].color;
         $(`#${data.user}`).css('color', `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`);
     }
     else {
@@ -77,10 +79,10 @@ window.players.update('updatePlayer', (data) => {
             fieldContent = data.nick ? 'NICK' : '';
             break;
         default:
-            fieldContent = data.nick ? 'NICK' : data.stats.bedwars.overall[field.toLowerCase()] || '0';
+            fieldContent = data.nick ? 'NICK' : data.stats.bedwars[mode][field.toLowerCase()] || '0';
             break;
         }
-        playerRow.innerHTML += `<td>${fieldContent}</td>`;
+        playerRow.innerHTML += `<td${field !== 'PLAYER' ? ' class=\"centered\"' : ''}>${fieldContent}</td>`;
     });
     sortTable('main-table'); // re sort the table
 });
@@ -109,6 +111,8 @@ window.players.delete('deletePlayer', (player) => {
 window.settings.initSettings('initSettings', (settings) => {
     $(`#${settings.client}`).prop('selected', true);
     $('#autowho').prop('checked', settings.autowho);
+    $(`#${settings.mode}`).prop('selected', true);
+    mode = settings.mode;
 });
 
 window.settings.invalidKey('invalidKey', () => {
@@ -120,17 +124,27 @@ window.settings.validKey('validKey', () => {
 });
 
 let settingsClicked = false;
+let transitioning = false;
 
 $('#settings-button').click(() => {
-    if(settingsClicked) {
-        $('#settings-button').removeClass('clicked');
-        $('#settings-button').css('transform','rotate(0deg)');
+    const transitionLength = 500;
+    if(!transitioning) {
+        transitioning = true;
+        if(settingsClicked) {
+            $('#settings-button').removeClass('clicked');
+            $('#settings-button').css('transform','rotate(0deg)');
+            $('#settings').animate({top: '-12em'}, transitionLength);
+        }
+        else {
+            $('#settings-button').addClass('clicked');
+            $('#settings-button').css('transform','rotate(180deg)');
+            $('#settings').animate({top: '10em'}, transitionLength);
+        }
     }
-    else {
-        $('#settings-button').addClass('clicked');
-        $('#settings-button').css('transform','rotate(180deg)');
-    }
-    settingsClicked = !settingsClicked;
+    setTimeout(() => {
+        transitioning = false;
+        settingsClicked = !settingsClicked;
+    }, transitionLength);
 });
 
 $('#client-select').change(async () => {
@@ -139,4 +153,9 @@ $('#client-select').change(async () => {
 
 $('#autowho').change(async (data) => {
     await window.settings.autowhoToggle(data.target.checked);
+});
+
+$('#mode-select').change(async () => {
+    mode = $('#mode-select :selected').val();
+    await window.settings.modeSelect(mode);
 });

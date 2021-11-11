@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('settings', {
     validKey: (event, func) => ipcRenderer.on('validKey', (event, data) => func()),
     autowhoToggle: (data) => ipcRenderer.send('autowhoToggle', data),
     clientSelect: (data) => ipcRenderer.send('clientSelect', data),
+    modeSelect: (data) => ipcRenderer.send('modeSelect', data),
 });
 
 contextBridge.exposeInMainWorld('players', {
