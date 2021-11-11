@@ -53,6 +53,8 @@ exports.readFromFile = async (path, win) => {
         file = fd;
     });
 
+    // need to add logic for when latest.log get rotated
+
     // method adopted from statsify, using watch file even though they dont for some reason
     fs.watchFile(path, {interval: 20}, () => {
         fs.read(file, Buffer.alloc(buffSize), 0, buffSize, filesize, (err, bytecount, buff) => {
@@ -69,7 +71,7 @@ exports.readFromFile = async (path, win) => {
     const process = async (line) => {
         // console.log(line);
         if(/.*\[CHAT\] (ONLINE:)?(\w| |\(|\/|\)|,|!|\[|\]|\+)+/.test(line)) { // this particular regex will prevent anything said by a player from getting futher
-            // console.log("LEGIT LINE: " + line);
+            // console.log(`LEGIT LINE: ${  line}`);
             if(line.includes(' ONLINE: ')) { // case for /who
                 const players = line.split(' [CHAT] ONLINE: ')[1].split(', ');
                 win.webContents.send('showPlayers', players);
@@ -100,6 +102,19 @@ exports.readFromFile = async (path, win) => {
                     const player = line.split(' [CHAT] ')[1].split(' has quit!')[0];
                     win.webContents.send('deletePlayer', player);
                 }
+            }
+            else if (line.includes('FINAL KILL!')) {
+                const player = line.split(' [CHAT] ')[1].split(' ')[0];
+                win.webContents.send('deletePlayer', player);
+            }
+            else if (line.includes('disconnected')) {
+                const player = line.split(' [CHAT] ')[1].split(' ')[0];
+                win.webContents.send('deletePlayer', player);
+            }
+            else if (line.includes('reconnected.')) {
+                const player = line.split(' [CHAT] ')[1].split(' ')[0];
+                win.webContents.send('addPlayer', player);
+                fetchAndUpdatePlayer(player);
             }
             else if (line.includes('Sending you to mini')) {
                 win.webContents.send('showPlayers', []); // reset the front end when we join a new lobby
