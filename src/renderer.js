@@ -123,6 +123,10 @@ window.settings.validKey('validKey', () => {
     $('#notice-text').text('');
 });
 
+window.settings.noticeText('noticeText', (text) => {
+    $('#notice-text').text(text);
+});
+
 let settingsClicked = false;
 let transitioning = false;
 

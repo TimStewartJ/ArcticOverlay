@@ -15,7 +15,13 @@ const gameModes = {
 exports.validKey = (key) => {
     return new Promise( resolve => {
         fetch(`https://api.hypixel.net/key?key=${key}`).then(res=> res.json()).catch(err => resolve(false))
-            .then(data => resolve(data.success));
+            .then(data => resolve(data));
+    });
+};
+
+exports.getDisplayName = (key, uuid) => {
+    return new Promise( resolve => {
+        fetch(`https://api.hypixel.net/player?key=${key}&uuid=${uuid}`).then(res => res.json()).then(data => resolve(data.player.displayname));
     });
 };
 

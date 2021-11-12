@@ -1,77 +1,82 @@
 const { read, write } = require('./settings');
 
-exports.readFromFile = async (path, win) => {
+exports.readFromFile = async (path, win, key) => {
     // this is where the latest.log is read
     // we used to use fs's watchfile to watch with a 20ms interval and grab the last line using read-last-lines
     // because multiple lines could be written in the same moment, we now manually read off the newest bytes with fs
     // this is the fastest method so far, but further experimentation is required
     // the package `always-tail` works but is not very fast
 
-    // this will call upon the api to get the player data and then update it on the front end
-    const fetchAndUpdatePlayer = async (player) => {
-        if(key) {
-            const playerData = await fetchPlayer(player, key);
-            if(!playerData.error) win.webContents.send('updatePlayer', playerData);
-            else console.log(`${player  } ${  playerData}`);
-        }
-    };
+    
 
     const buffSize = 2056;
 
     const fs = require('fs');
 
-    // const rll = require('read-last-lines');
-
-    // const Tail = require('always-tail');
-
-    // const tail = new Tail(path, '\n');
-
     const ks = require('node-key-sender');
     ks.setOption('startDelayMillisec', 25);
 
-    const { fetchPlayer, validKey } = require('./fetchPlayers.js');
+    const { fetchPlayer, validKey, getDisplayName } = require('./fetchPlayers.js');
 
-    let key = read('key');
+    // this will call upon the api to get the player data and then update it on the front end
+    const fetchAndUpdatePlayer = async (player) => {
+        if(key) {
+            const playerData = await fetchPlayer(player, key);
+            if(!playerData.error) win.webContents.send('updatePlayer', playerData);
+            // else console.log(`${player  } ${  playerData}`);
+        }
+    };
 
-    // let test = await validKey(key);
-        
-    // console.log(test);
+    const keyfetch = await validKey(key);
+
+    let user;
     
-    if(!key || !await validKey(key)) {
+    if(!read('key') || !keyfetch.success) {
         win.webContents.send('invalidKey');
-        
+    }
+    else {
+        user = await getDisplayName(key, keyfetch.record.owner);
     }
 
     let autowho = false;
 
-    const logData = fs.statSync(path);
+    let logData;
+    try {
+        logData = fs.statSync(path);
+    }
+    catch(err) {
+        win.webContents.send('noticeText', 'INVALID CLIENT - make sure your client is set properly and restart the overlay!');
+        return err;
+    }
+
     let filesize = logData.size;
 
-    
     let file;
+
     fs.open(path, 'r', (err, fd) => {
         file = fd;
     });
 
-    // need to add logic for when latest.log get rotated
-
-    // method adopted from statsify, using watch file even though they dont for some reason
     fs.watchFile(path, {interval: 20}, () => {
         fs.read(file, Buffer.alloc(buffSize), 0, buffSize, filesize, (err, bytecount, buff) => {
             filesize += bytecount;
             const lines = buff.toString().split(/\r?\n/).slice(0, -1);
             lines.forEach(line => process(line));
         });
+    });
 
-        // rll.read(path, 1).then((line) => {
-        //     process(line);
-        // });
+    fs.watch(path.split('/').slice(0, -1).join('/'), (event, filename) => { // watching for if latest.log get rotated olr anything
+        if (event === 'rename' && filename === 'latest.log') {
+            fs.open(path, 'r', (err, fd) => {
+                file = fd;
+            });
+        }
     });
 
     const process = async (line) => {
         // console.log(line);
         if(/.*\[CHAT\] (ONLINE:)?(\w| |\(|\/|\)|,|!|\[|\]|\+)+/.test(line)) { // this particular regex will prevent anything said by a player from getting futher
-            // console.log(`LEGIT LINE: ${  line}`);
+            console.log(`LEGIT LINE: ${  line}`);
             if(line.includes(' ONLINE: ')) { // case for /who
                 const players = line.split(' [CHAT] ONLINE: ')[1].split(', ');
                 win.webContents.send('showPlayers', players);
@@ -81,7 +86,7 @@ exports.readFromFile = async (path, win) => {
             }
             else if (/has (joined \(\d+\/\d+\)|quit)!/.test(line)) {
                 if (line.includes(' has joined ')) { // case for someone joining the lobby
-                    if(read('autowho') && !autowho) {
+                    if(read('autowho') && (!autowho || line.includes(`${user} has joined`))) {
                         ks.startBatch()
                             .batchTypeKey('control') // We send these keys before because they can often interfere with `/who` if they were already pressed down. Might (try) to make this configurable (somehow) if enough people use different layouts for it to matter.
                             .batchTypeKey('w')
