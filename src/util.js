@@ -1,4 +1,4 @@
-exports.ratio = (top = 0, bottom = 0) => {
+exports.ratio = (top = 0, bottom = 1) => {
     return (top / bottom).toFixed(2);
 };
 

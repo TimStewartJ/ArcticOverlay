@@ -1,8 +1,10 @@
 {
     "paths": {
-        "lunar-win32" : "/.lunarclient/offline/1.8",
         "vanilla-win32" : "/AppData/Roaming/.minecraft",
+        "lunar-win32" : "/.lunarclient/offline/1.8",
+        "badlion-win32" : "/AppData/Roaming/.minecraft/logs/blclient/minecraft",
+        "vanilla-darwin" : "/Library/Application Support/minecraft",
         "lunar-darwin" : "/.lunarclient/offline/1.8",
-        "vanilla-darwin" : "/Library/Application Support/minecraft"
+        "badlion-darwin" : "/Library/Application Support/minecraft/logs/blclient/minecraft"
     }
 }

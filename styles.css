@@ -5,11 +5,17 @@
     font-style: normal;
 }
 
+html {
+    height: 100%;
+}
+
 body {
     background-color: #daf0ee;
     color: #3b413c; 
     /* #506184*/
     font-family: "Roboto";
+    margin: 0.5em;
+    height: calc(100% - 1em);
 }
 
 header {
@@ -22,7 +28,7 @@ header {
     border-color: #9db5b2;
     border-width: 0.25em;
     border-radius: 1em;*/
-    padding: 5px;
+    padding: 0.25em;
     height: 4em;
 }
 
@@ -57,16 +63,19 @@ header h1 {
     color: red;
 }
 
+/* settings stuff */
+
 #settings {
-    top: -12em;
+    top: -15em;
     position: absolute;
     /* background-color: #daf0ee; */
     background-color: rgba(0, 0, 0, 0.9);
     color: #daf0ee;
-    padding: 0.5em;
-    border-radius: 0.25em;
-    height: 10em;
-    width: calc(100% - 1em - 1em);
+    padding: 1em;
+    margin: 0 2em 0 2em;
+    border-radius: 0.5em;
+    height: 13em;
+    width: calc(100% - 2em - 4em - 1em); /* 100 percent minus the padding minus the margin minus the body margin */
 }
 
 #settings-button {
@@ -85,6 +94,10 @@ header h1 {
     transform: scale(110%);
 }
 
+/* button {
+    border: none;
+} */
+
 .clicked {
     /* transition: all 1s; */
     color: #334942;
@@ -93,6 +106,13 @@ header h1 {
 
 .nick {
     color: red;
+}
+
+#misc-footer {
+    bottom: 0;
+    position: absolute;
+    width: calc(100% - 1em);
+    margin-bottom: 2em;
 }
 
 

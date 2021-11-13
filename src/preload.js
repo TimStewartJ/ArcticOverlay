@@ -16,3 +16,8 @@ contextBridge.exposeInMainWorld('players', {
     update: (event, func) => ipcRenderer.on('updatePlayer', (event, data) => func(data)),
     delete: (event, func) => ipcRenderer.on('deletePlayer', (event, data) => func(data))
 });
+
+contextBridge.exposeInMainWorld('misc', {
+    manualLookup: (data) => ipcRenderer.send('manualLookup', data),
+    clearTable: () => ipcRenderer.send('clearTable'),
+});

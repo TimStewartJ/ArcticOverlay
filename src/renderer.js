@@ -1,4 +1,4 @@
-const fields = ['PLAYER', 'TAG', 'WS', 'FKDR', 'WLR', 'BBLR'];
+const fields = ['PLAYER', 'TAG', 'WS', 'FKDR', 'FINAL', 'WLR', 'BBLR'];
 
 let mode;
 
@@ -34,7 +34,7 @@ const sortTable = (tableName) => {
 
 // table updating functions from main
 
-window.players.display('showPlayers', (data) => {
+const showPlayers = (data) => {
     const table = document.getElementById('main-table');
     table.innerHTML = ''; // reset table
     // create the header row and add the field titles to it
@@ -44,16 +44,20 @@ window.players.display('showPlayers', (data) => {
     });
     table.appendChild(headrow);
 
-    
     data.forEach(player => { // for each player, create a row and populate each field with ...
         const node = document.createElement('tr');
         node.setAttribute('id', player);
+        node.classList.add('player');
         fields.forEach(field => {
-            if(field === 'PLAYER') node.innerHTML += `<td>${player}</td>`;
+            if(field === 'PLAYER') node.innerHTML += `<td class="player-name">${player}</td>`;
             else node.innerHTML += '<td>...</td>';
         });
         table.appendChild(node);
     });
+};
+
+window.players.display('showPlayers', (data) => {
+    showPlayers(data);
 });
 
 window.players.update('updatePlayer', (data) => {
@@ -68,6 +72,7 @@ window.players.update('updatePlayer', (data) => {
     else {
         playerRow.classList.add('nick');
     }
+
     // populate each field with the necessary data
     fields.forEach(field => {
         let fieldContent;
@@ -82,19 +87,21 @@ window.players.update('updatePlayer', (data) => {
             fieldContent = data.nick ? 'NICK' : data.stats.bedwars[mode][field.toLowerCase()] || '0';
             break;
         }
-        playerRow.innerHTML += `<td${field !== 'PLAYER' ? ' class=\"centered\"' : ''}>${fieldContent}</td>`;
+        playerRow.innerHTML += `<td${field !== 'PLAYER' ? ' class=\"centered\"' : ' class="player-name"'}>${fieldContent}</td>`;
     });
     sortTable('main-table'); // re sort the table
 });
 
 window.players.add('addPlayer', (player) => {
+    if($(`#${player}`).length) return;
     const table = document.getElementById('main-table');
     const node = document.createElement('tr'); // create a new row for the player
     node.setAttribute('id', player);
+    node.classList.add('player');
 
     // populate it with the default ...
     fields.forEach(e => {
-        if(e === 'PLAYER') node.innerHTML += `<td>${player}</td>`;
+        if(e === 'PLAYER') node.innerHTML += `<td class="player-name">${player}</td>`;
         else node.innerHTML += '<td>...</td>';
     });
     table.appendChild(node);
@@ -137,12 +144,12 @@ $('#settings-button').click(() => {
         if(settingsClicked) {
             $('#settings-button').removeClass('clicked');
             $('#settings-button').css('transform','rotate(0deg)');
-            $('#settings').animate({top: '-12em'}, transitionLength);
+            $('#settings').animate({top: '-15em'}, transitionLength);
         }
         else {
             $('#settings-button').addClass('clicked');
             $('#settings-button').css('transform','rotate(180deg)');
-            $('#settings').animate({top: '10em'}, transitionLength);
+            $('#settings').animate({top: '5em'}, transitionLength);
         }
     }
     setTimeout(() => {
@@ -161,5 +168,30 @@ $('#autowho').change(async (data) => {
 
 $('#mode-select').change(async () => {
     mode = $('#mode-select :selected').val();
-    await window.settings.modeSelect(mode);
+    const players = [];
+    $('.player').each(function () {
+        players.push($(this).attr('id'));
+    });
+    await window.settings.modeSelect({
+        mode: mode,
+        players: players,
+    });
+});
+
+// misc functions
+
+// $('#lookup-submit').click(async () => {
+//     await window.misc.manualLookup($('#manual-lookup').val());
+// });
+
+$('#clear-table').click(async () => {
+    // await window.misc.clearTable();
+    showPlayers([]);
+});
+
+$('#lookup-form').submit((e) => {
+    e.preventDefault();
+    const lookupName = $('#manual-lookup').val();
+    $('#manual-lookup').val('');
+    window.misc.manualLookup(lookupName);
 });

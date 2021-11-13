@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain, globalShortcut } = require('electron');
 const { write, read } = require('./src/settings.js');
 const pathjs = require('path');
-const { readFromFile } = require('./src/readPlayers.js');
+const { readFromFile, manualLookup, refreshPlayers } = require('./src/readPlayers.js');
 const { paths } = require('./data.json');
 try {
     require('electron-reloader')(module);
@@ -11,9 +11,9 @@ app.on('ready', () => {
     // init the window and set it to load from index.html
     const win = new BrowserWindow({
         width: 1000,
-        height: 800,
-        minWidth: 500,
-        minHeight: 100,
+        height: 600,
+        minWidth: 700,
+        minHeight: 400,
         webPreferences: {
             nodeIntegration: true,
             preload: pathjs.join(__dirname, 'src/preload.js')
@@ -67,7 +67,12 @@ app.on('ready', () => {
     });
 
     ipcMain.on('modeSelect', (e, data) => {
-        write('mode', data);
+        write('mode', data.mode);
+        refreshPlayers(data.players, win, read('key'));
+    });
+
+    ipcMain.on('manualLookup', (e, data) => {
+        manualLookup(data, win, read('key'));
     });
 });
 

@@ -68,6 +68,7 @@ exports.fetchPlayer = (player, key) => {
                             stars: stars,
                             ws: bedwars[`${val}winstreak`] || 0,
                             fkdr: ratio(bedwars[`${val}final_kills_bedwars`], bedwars[`${val}final_deaths_bedwars`]),
+                            final: bedwars[`${val}final_kills_bedwars`] || 0,
                             wlr: ratio(bedwars[`${val}wins_bedwars`], bedwars[`${val}losses_bedwars`]),
                             bblr: ratio(bedwars[`${val}beds_broken_bedwars`], bedwars[`${val}beds_lost_bedwars`]),
                             color: color(650, 0, (stars*Math.pow(ratio(bedwars[`${val}final_kills_bedwars`], bedwars[`${val}final_deaths_bedwars`]), 2)/10)),

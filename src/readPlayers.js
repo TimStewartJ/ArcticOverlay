@@ -1,4 +1,26 @@
 const { read, write } = require('./settings');
+const { fetchPlayer, validKey, getDisplayName } = require('./fetchPlayers.js');
+
+// this will call upon the api to get the player data and then update it on the front end
+const fetchAndUpdatePlayer = async (player, win, key) => {
+    if(key) {
+        const playerData = await fetchPlayer(player, key);
+        if(!playerData.error) win.webContents.send('updatePlayer', playerData);
+        // else console.log(`${player  } ${  playerData}`);
+    }
+};
+
+exports.manualLookup = async (player, win, key) => {
+    win.webContents.send('addPlayer', player);
+    fetchAndUpdatePlayer(player, win, key);
+};
+
+exports.refreshPlayers = async (players, win, key) => {
+    win.webContents.send('showPlayers', players);
+    players.forEach( async (player) => {
+        fetchAndUpdatePlayer(player, win, key);
+    });
+};
 
 exports.readFromFile = async (path, win, key) => {
     // this is where the latest.log is read
@@ -7,25 +29,12 @@ exports.readFromFile = async (path, win, key) => {
     // this is the fastest method so far, but further experimentation is required
     // the package `always-tail` works but is not very fast
 
-    
-
     const buffSize = 2056;
 
     const fs = require('fs');
 
     const ks = require('node-key-sender');
     ks.setOption('startDelayMillisec', 25);
-
-    const { fetchPlayer, validKey, getDisplayName } = require('./fetchPlayers.js');
-
-    // this will call upon the api to get the player data and then update it on the front end
-    const fetchAndUpdatePlayer = async (player) => {
-        if(key) {
-            const playerData = await fetchPlayer(player, key);
-            if(!playerData.error) win.webContents.send('updatePlayer', playerData);
-            // else console.log(`${player  } ${  playerData}`);
-        }
-    };
 
     const keyfetch = await validKey(key);
 
@@ -81,7 +90,7 @@ exports.readFromFile = async (path, win, key) => {
                 const players = line.split(' [CHAT] ONLINE: ')[1].split(', ');
                 win.webContents.send('showPlayers', players);
                 players.forEach( async (player) => {
-                    fetchAndUpdatePlayer(player);
+                    fetchAndUpdatePlayer(player, win, key);
                 });
             }
             else if (/has (joined \(\d+\/\d+\)|quit)!/.test(line)) {
@@ -101,7 +110,7 @@ exports.readFromFile = async (path, win, key) => {
                     }
                     const player = line.split(' [CHAT] ')[1].split(' has joined')[0];
                     win.webContents.send('addPlayer', player);
-                    fetchAndUpdatePlayer(player);
+                    fetchAndUpdatePlayer(player, win, key);
                 }
                 else if (line.includes(' has quit!')) { // case for someone quiting the lobby
                     const player = line.split(' [CHAT] ')[1].split(' has quit!')[0];
@@ -119,7 +128,7 @@ exports.readFromFile = async (path, win, key) => {
             else if (line.includes('reconnected.')) {
                 const player = line.split(' [CHAT] ')[1].split(' ')[0];
                 win.webContents.send('addPlayer', player);
-                fetchAndUpdatePlayer(player);
+                fetchAndUpdatePlayer(player, win, key);
             }
             else if (line.includes('Sending you to mini')) {
                 win.webContents.send('showPlayers', []); // reset the front end when we join a new lobby

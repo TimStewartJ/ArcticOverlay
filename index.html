@@ -41,24 +41,53 @@
       <th>PLAYER</th>
       <th>TAG</th>
       <th>WS</th>
-      <th>WINS</th>
-      <th>FINALS</th>
       <th>FKDR</th>
+      <th>FINALS</th>
       <th>WLR</th>
       <th>BBLR</th>
     </tr>
   </table>
 
+  <br/>
+
+  <div id="misc-footer">
+
+    <form id="lookup-form">
+
+      <label for="manual-lookup">Manual Player Lookup: </label>
+      <input type="text" name="manual-lookup" id="manual-lookup" />
+
+      <!-- <button type="submit" id="lookup-submit">Submit!</button> -->
+      <input type="submit" id="lookup-submit" />
+    </form>
+
+    <!-- <br/> -->
+
+    <button id="clear-table">Clear Table</button>
+
+  </div>
+
   <div id="settings">
     <h2>SETTINGS</h2>
+    <p>
     <label for="client-select">Choose a client:</label>
     <select name="client-select" id="client-select">
-      <option value="lunar" id="lunar">Lunar Client</option>
       <option value="vanilla" id="vanilla">Vanilla/Labymod</option>
+      <option value="lunar" id="lunar">Lunar Client</option>
+      <option value="badlion" id="badlion">Badlion Client</option>
     </select>
-    <br/>
+    </p>
+
+    <!-- <br/> -->
+
+    <p>
     <label for="autowho">Autowho</label>
     <input type="checkbox" id="autowho" name="autowho"/>
+    </p>
+
+    <!-- <br/> -->
+
+    <p>
     <label for="mode-select">Stats Mode:</label>
     <select name="mode-select" id="mode-select">
       <option value="overall" id="overall">Overall</option>
@@ -66,6 +95,7 @@
       <option value="threes" id="threes">Threes</option>
       <option value="fours" id="fours">Fours</option>
     </select>
+    </p>
   </div>
 
   <!-- <button id="start-reading">Start reading log</button> -->
