@@ -34,7 +34,20 @@ const sortTable = (tableName) => {
 
 // table updating functions from main
 
-const showPlayers = (data) => {
+// create a new row for the player and populate it with the default ...
+const createPlayerRow = (name) => {
+    const node = document.createElement('tr');
+    node.setAttribute('id', name.toLowerCase());
+    node.classList.add('player');
+    fields.forEach(field => {
+        if(field === 'PLAYER') node.innerHTML += `<td class="player-name">${name}</td>`;
+        else node.innerHTML += '<td>...</td>';
+    });
+    return node;
+};
+
+// reset the table and show the players in the provided input
+const showPlayers = (players) => {
     const table = document.getElementById('main-table');
     table.innerHTML = ''; // reset table
     // create the header row and add the field titles to it
@@ -44,30 +57,25 @@ const showPlayers = (data) => {
     });
     table.appendChild(headrow);
 
-    data.forEach(player => { // for each player, create a row and populate each field with ...
-        const node = document.createElement('tr');
-        node.setAttribute('id', player);
-        node.classList.add('player');
-        fields.forEach(field => {
-            if(field === 'PLAYER') node.innerHTML += `<td class="player-name">${player}</td>`;
-            else node.innerHTML += '<td>...</td>';
-        });
-        table.appendChild(node);
+    players.forEach(player => { // for each player, create a row and populate each field with ...
+        table.appendChild(createPlayerRow(player));
     });
 };
 
-window.players.display('showPlayers', (data) => {
-    showPlayers(data);
+window.players.display('showPlayers', (players) => {
+    showPlayers(players);
 });
 
 window.players.update('updatePlayer', (data) => {
-    const playerRow = document.getElementById(data.user); // find the player row
+    const playerRow = document.getElementById(data.user.toLowerCase()); // find the player row
     playerRow.innerHTML = ''; // reset the player row's data
+
+    //console.log(data.stats.bedwars.fours);
 
     //if the player is not a nick, color them according to their threat level
     if(!data.nick) {
         const rgb = data.stats.bedwars[mode].color;
-        $(`#${data.user}`).css('color', `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`);
+        $(`#${data.user.toLowerCase()}`).css('color', `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`);
     }
     else {
         playerRow.classList.add('nick');
@@ -93,23 +101,14 @@ window.players.update('updatePlayer', (data) => {
 });
 
 window.players.add('addPlayer', (player) => {
-    if($(`#${player}`).length) return;
+    if($(`#${player.toLowerCase()}`).length) return;
     const table = document.getElementById('main-table');
-    const node = document.createElement('tr'); // create a new row for the player
-    node.setAttribute('id', player);
-    node.classList.add('player');
-
-    // populate it with the default ...
-    fields.forEach(e => {
-        if(e === 'PLAYER') node.innerHTML += `<td class="player-name">${player}</td>`;
-        else node.innerHTML += '<td>...</td>';
-    });
-    table.appendChild(node);
+    table.appendChild(createPlayerRow(player));
 });
 
 window.players.delete('deletePlayer', (player) => {
     // find the row corresponding to the player, and if it exists, delete it
-    const row = document.getElementById(player);
+    const row = document.getElementById(player.toLowerCase());
     if(row) row.parentNode.removeChild(row);
 });
 

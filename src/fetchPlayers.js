@@ -49,11 +49,11 @@ exports.fetchPlayer = (player, key) => {
                     const formattedRank = getFormattedRank(rank, plusColor.mc);
 
                     data = {
-                        user: player,
+                        user: data.player.displayname,
                         uuid: data.player.uuid,
                         coloredstar: mcColor(getBwFormattedLevel(Math.trunc(stars))),
                         rank: rank,
-                        displayName: `${mcColor(`${formattedRank}${player}`)}`,
+                        displayName: `${mcColor(`${formattedRank}${data.player.displayname}`)}`,
                         stats: {
                             bedwars: {
                                 stars: stars,
