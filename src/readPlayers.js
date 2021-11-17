@@ -1,5 +1,6 @@
 const { read, write } = require('./settings');
 const { fetchPlayer, validKey, getDisplayName } = require('./fetchPlayers.js');
+const activeWindows = require('electron-active-window');
 
 // this will call upon the api to get the player data and then update it on the front end
 const fetchAndUpdatePlayer = async (player, win, key) => {
@@ -76,6 +77,8 @@ exports.readFromFile = async (path, win, key) => {
 
     fs.watch(path.split('/').slice(0, -1).join('/'), (event, filename) => { // watching for if latest.log get rotated olr anything
         if (event === 'rename' && filename === 'latest.log') {
+            console.log(event);
+            console.log(filename);
             fs.open(path, 'r', (err, fd) => {
                 file = fd;
             });
@@ -96,17 +99,22 @@ exports.readFromFile = async (path, win, key) => {
             else if (/has (joined \(\d+\/\d+\)|quit)!/.test(line)) {
                 if (line.includes(' has joined ')) { // case for someone joining the lobby
                     if(read('autowho') && (!autowho || line.includes(`${user} has joined`))) {
-                        ks.startBatch()
-                            .batchTypeKey('control') // We send these keys before because they can often interfere with `/who` if they were already pressed down. Might (try) to make this configurable (somehow) if enough people use different layouts for it to matter.
-                            .batchTypeKey('w')
-                            .batchTypeKey('a')
-                            .batchTypeKey('s')
-                            .batchTypeKey('d')
-                            .batchTypeKey('space')
-                            .batchTypeKey('slash', 50)
-                            .batchTypeKeys(['w','h','o','enter'])
-                            .sendBatch();
-                        autowho = true;
+                        activeWindows().getActiveWindow().then((result)=>{
+                            console.log(result);
+                            if((result.windowClass).includes('javaw')) {
+                                ks.startBatch()
+                                    .batchTypeKey('control') // We send these keys before because they can often interfere with `/who` if they were already pressed down. Might (try) to make this configurable (somehow) if enough people use different layouts for it to matter.
+                                    .batchTypeKey('w')
+                                    .batchTypeKey('a')
+                                    .batchTypeKey('s')
+                                    .batchTypeKey('d')
+                                    .batchTypeKey('space')
+                                    .batchTypeKey('slash', 50)
+                                    .batchTypeKeys(['w','h','o','enter'])
+                                    .sendBatch();
+                                autowho = true;
+                            }
+                        });
                     }
                     const player = line.split(' [CHAT] ')[1].split(' has joined')[0];
                     win.webContents.send('addPlayer', player);

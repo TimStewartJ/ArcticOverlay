@@ -60,6 +60,7 @@ app.on('ready', () => {
 
     ipcMain.on('clientSelect', (e, data) => {
         clientSelect(data);
+        win.webContents.send('noticeText', 'Please restart the overlay!');
     });
 
     ipcMain.on('autowhoToggle', (e, data) => {
