@@ -10,6 +10,7 @@ const gameModes = {
     doubles: 'eight_two',
     threes: 'four_three',
     fours: 'four_four',
+    fourvfours: 'two_four',
 };
 
 exports.validKey = (key) => {
