@@ -1,5 +1,5 @@
 const { read, write } = require('./settings');
-const { fetchPlayer, validKey, getDisplayName } = require('./fetchPlayers.js');
+const { fetchPlayer, validKey, getDisplayName, fetchSniperStatus } = require('./fetchPlayers.js');
 const activeWindows = require('electron-active-window');
 
 // this will call upon the api to get the player data and then update it on the front end
@@ -7,6 +7,8 @@ const fetchAndUpdatePlayer = async (player, win, key) => {
     if(key) {
         const playerData = await fetchPlayer(player, key);
         if(!playerData.error) win.webContents.send('updatePlayer', playerData);
+        const sniperData = await fetchSniperStatus(player, key);
+        if(!sniperData.error && sniperData.sniper) win.webContents.send('updatePlayer', sniperData);
         // else console.log(`${player  } ${  playerData}`);
     }
 };

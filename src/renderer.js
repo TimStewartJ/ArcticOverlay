@@ -41,7 +41,7 @@ const createPlayerRow = (name) => {
     node.classList.add('player');
     fields.forEach(field => {
         if(field === 'PLAYER') node.innerHTML += `<td class="player-name">${name}</td>`;
-        else node.innerHTML += '<td>...</td>';
+        else node.innerHTML += '<td class=\"centered\">...</td>';
     });
     return node;
 };
@@ -67,10 +67,14 @@ window.players.display('showPlayers', (players) => {
 });
 
 window.players.update('updatePlayer', (data) => {
+    // if we are receiving sniper data
+    if(data.sniperData) {
+        $(`#${data.user.toLowerCase()} td:nth-child(${2})`).text('SNIPER');
+        return;
+    }
+
     const playerRow = document.getElementById(data.user.toLowerCase()); // find the player row
     playerRow.innerHTML = ''; // reset the player row's data
-
-    //console.log(data.stats.bedwars.fours);
 
     //if the player is not a nick, color them according to their threat level
     if(!data.nick) {

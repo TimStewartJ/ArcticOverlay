@@ -80,3 +80,17 @@ exports.fetchPlayer = (player, key) => {
             });
     });
 };
+
+exports.fetchSniperStatus = (player, key) => {
+    return new Promise( resolve => {
+        const lookup = `name=${player}`;
+        fetch(`https://statsify.net/api/overlay/sniper?key=${key}&${lookup}`)
+            .then(res => res.json()).catch(err => resolve({error: true, reason: err, user: player}))
+            .then(data => {
+                if(data.success) resolve({error: false, sniper: data.sniper, sniperData: true, user: player});
+                else {
+                    resolve({error: true, user: player});
+                }
+            });
+    });
+};
