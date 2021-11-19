@@ -4,11 +4,15 @@ const pathjs = require('path');
 const { readFromFile, manualLookup, refreshPlayers } = require('./src/readPlayers.js');
 const { paths } = require('./data.json');
 const windowStateKeeper = require('electron-window-state');
+const { autoUpdater } = require('electron-updater');
 try {
     require('electron-reloader')(module);
 } catch {}
 
 app.on('ready', () => {
+
+    autoUpdater.checkForUpdatesAndNotify();
+
     // Load the previous state with fallback to defaults
     const mainWindowState = windowStateKeeper({
         defaultWidth: 1000,
@@ -98,7 +102,5 @@ app.on('ready', () => {
 });
 
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    app.quit();
 });

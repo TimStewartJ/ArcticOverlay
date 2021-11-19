@@ -6,13 +6,15 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
-    "lint": "eslint --fix --ext .js,.json src/ .eslintrc.js index.js"
+    "lint": "eslint --fix --ext .js,.json src/ .eslintrc.js index.js",
+    "release": "electron-builder --publish always"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "electron-active-window": "^0.0.6",
     "electron-store": "^8.0.1",
+    "electron-updater": "^4.3.9",
     "electron-window-state": "^5.0.3",
     "node-fetch": "^2.6.6",
     "node-key-sender": "^1.0.11"
@@ -27,6 +29,7 @@
   },
   "build": {
     "appId": "com.arctic.arcticoverlay",
+    "productName": "Arctic Overlay",
     "win": {
       "target": "nsis"
     },

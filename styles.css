@@ -112,7 +112,8 @@ header h1 {
     bottom: 0;
     position: absolute;
     width: calc(100% - 1em);
-    margin-bottom: 2em;
+    padding-bottom: 2em;
+    background-color: #daf0ee;
 }
 
 
