@@ -3,15 +3,25 @@ const { write, read } = require('./src/settings.js');
 const pathjs = require('path');
 const { readFromFile, manualLookup, refreshPlayers } = require('./src/readPlayers.js');
 const { paths } = require('./data.json');
+const windowStateKeeper = require('electron-window-state');
 try {
     require('electron-reloader')(module);
 } catch {}
 
 app.on('ready', () => {
+    // Load the previous state with fallback to defaults
+    const mainWindowState = windowStateKeeper({
+        defaultWidth: 1000,
+        defaultHeight: 700
+    });
+
     // init the window and set it to load from index.html
     const win = new BrowserWindow({
-        width: 1000,
-        height: 600,
+        show: false,
+        x: mainWindowState.x,
+        y: mainWindowState.y,
+        width: mainWindowState.width,
+        height: mainWindowState.height,
         minWidth: 700,
         minHeight: 400,
         webPreferences: {
@@ -20,15 +30,25 @@ app.on('ready', () => {
         }
     });
 
+    // this will let electron window state manage the window for us
+    mainWindowState.manage(win);
+
     win.loadFile('index.html');
 
     win.removeMenu();
 
+    win.once('ready-to-show', () => {
+        win.show();
+    });
+
+    // shortcuts - f5 to refresh page and ctrl+shift+i to show dev tools
     globalShortcut.register('f5', () => {
         win.reload();
     });
 
-    win.webContents.openDevTools();
+    globalShortcut.register('CommandOrControl+Shift+I', () => {
+        win.webContents.openDevTools();
+    });
 
     const clientSelect = (client) => {
         write('path', `${app.getPath('home').replace(/\\/g, '\/') + paths[`${client}-${process.platform}`]  }/logs/latest.log`);

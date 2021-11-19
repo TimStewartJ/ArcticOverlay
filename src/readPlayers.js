@@ -5,7 +5,7 @@ const activeWindows = require('electron-active-window');
 // this will call upon the api to get the player data and then update it on the front end
 const fetchAndUpdatePlayer = async (player, win, key) => {
     if(key) {
-        const playerData = await fetchPlayer(player, key);
+        const playerData = await fetchPlayer(player.toLowerCase(), key);
         if(!playerData.error) win.webContents.send('updatePlayer', playerData);
         const sniperData = await fetchSniperStatus(player, key);
         if(!sniperData.error && sniperData.sniper) win.webContents.send('updatePlayer', sniperData);
@@ -101,9 +101,10 @@ exports.readFromFile = async (path, win, key) => {
             else if (/has (joined \(\d+\/\d+\)|quit)!/.test(line)) {
                 if (line.includes(' has joined ')) { // case for someone joining the lobby
                     if(read('autowho') && (!autowho || line.includes(`${user} has joined`))) {
+                        autowho = true;
                         activeWindows().getActiveWindow().then((result)=>{
                             console.log(result);
-                            if((result.windowClass).includes('javaw')) {
+                            if((result.windowClass).includes('java')) {
                                 ks.startBatch()
                                     .batchTypeKey('control') // We send these keys before because they can often interfere with `/who` if they were already pressed down. Might (try) to make this configurable (somehow) if enough people use different layouts for it to matter.
                                     .batchTypeKey('w')
@@ -114,7 +115,6 @@ exports.readFromFile = async (path, win, key) => {
                                     .batchTypeKey('slash', 50)
                                     .batchTypeKeys(['w','h','o','enter'])
                                     .sendBatch();
-                                autowho = true;
                             }
                         });
                     }

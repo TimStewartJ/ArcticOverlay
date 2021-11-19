@@ -13,6 +13,7 @@
   "dependencies": {
     "electron-active-window": "^0.0.6",
     "electron-store": "^8.0.1",
+    "electron-window-state": "^5.0.3",
     "node-fetch": "^2.6.6",
     "node-key-sender": "^1.0.11"
   },
