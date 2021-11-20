@@ -1,6 +1,9 @@
 const { read, write } = require('./settings');
 const { fetchPlayer, validKey, getDisplayName, fetchSniperStatus } = require('./fetchPlayers.js');
-const activeWindows = require('electron-active-window');
+const activeWindow = require('active-win');
+const ks = require('node-key-sender');
+// const activeWindows = require('electron-active-window');
+
 
 // this will call upon the api to get the player data and then update it on the front end
 const fetchAndUpdatePlayer = async (player, win, key) => {
@@ -36,7 +39,7 @@ exports.readFromFile = async (path, win, key) => {
 
     const fs = require('fs');
 
-    const ks = require('node-key-sender');
+    
     ks.setOption('startDelayMillisec', 25);
 
     const keyfetch = await validKey(key);
@@ -102,9 +105,9 @@ exports.readFromFile = async (path, win, key) => {
                 if (line.includes(' has joined ')) { // case for someone joining the lobby
                     if(read('autowho') && (!autowho || line.includes(`${user} has joined`))) {
                         autowho = true;
-                        activeWindows().getActiveWindow().then((result)=>{
+                        activeWindow().then((result)=>{
                             console.log(result);
-                            if((result.windowClass).includes('java')) {
+                            if((result.owner.name).includes('java')) {
                                 ks.startBatch()
                                     .batchTypeKey('control') // We send these keys before because they can often interfere with `/who` if they were already pressed down. Might (try) to make this configurable (somehow) if enough people use different layouts for it to matter.
                                     .batchTypeKey('w')
