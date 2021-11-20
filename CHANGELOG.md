@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [1.1.0] - 2021-11-20
 ### Removed
  - Default title bar, replaced with custom one.
 ### Added
