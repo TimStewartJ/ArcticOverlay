@@ -47,7 +47,7 @@ exports.readFromFile = async (path, win, key) => {
     let user;
     
     if(!read('key') || !keyfetch.success) {
-        win.webContents.send('invalidKey');
+        win.webContents.send('noticeText', 'Invalid key! Run /api new.');
     }
     else {
         user = await getDisplayName(key, keyfetch.record.owner);
@@ -150,7 +150,7 @@ exports.readFromFile = async (path, win, key) => {
             else if (line.includes('Your new API key is ')) {
                 key = line.split('[CHAT] Your new API key is ')[1];
                 write('key', key);
-                if(await validKey(key)) win.webContents.send('validKey');
+                if(await validKey(key)) win.webContents.send('noticeText', '');
             }
         }
     };

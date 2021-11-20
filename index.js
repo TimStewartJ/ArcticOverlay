@@ -73,13 +73,17 @@ app.on('ready', () => {
     if(!read('mode')) {
         write('mode', 'overall');
     }
+    if(!read('theme-darkmode')) {
+        write('theme-darkmode', false);
+    }
 
     win.webContents.once('dom-ready', () => {
         win.webContents.send('initSettings', {
             path: read('path'),
             client: read('client'),
             autowho: read('autowho'),
-            mode: read('mode')
+            mode: read('mode'),
+            darkmode: read('theme-darkmode')
         });
         // start reading from the file immediately
         readFromFile(read('path'), win, read('key'));
@@ -87,18 +91,23 @@ app.on('ready', () => {
 
     // listen for settings changes
 
-    ipcMain.on('clientSelect', (e, data) => {
-        clientSelect(data);
-        win.webContents.send('noticeText', 'Please restart the overlay!');
-    });
-
-    ipcMain.on('autowhoToggle', (e, data) => {
-        write('autowho', data);
-    });
-
-    ipcMain.on('modeSelect', (e, data) => {
-        write('mode', data.mode);
-        refreshPlayers(data.players, win, read('key'));
+    ipcMain.on('updateSettings', (e, data) => {
+        switch(data.type) {
+        case 'client':
+            clientSelect(data.client);
+            win.webContents.send('noticeText', 'Please restart the overlay!');
+            break;
+        case 'autowho':
+            write('autowho', data.autowho);
+            break;
+        case 'modeSelect':
+            write('mode', data.modeSelect.mode);
+            refreshPlayers(data.modeSelect.players, win, read('key'));
+            break;
+        case 'darkmode':
+            write('theme-darkmode', data.darkmode);
+            break;
+        }
     });
 
     ipcMain.on('manualLookup', (e, data) => {

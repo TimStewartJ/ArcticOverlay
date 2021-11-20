@@ -8,6 +8,8 @@
  - New app icon.
 ### Changed
  - Miscellaneous visuals.
+ - How settings work internally.
+ - Darkmode preference is now saved.
 
 ## [1.0.1] - 2021-11-19
 ### Added
