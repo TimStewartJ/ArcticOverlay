@@ -53,7 +53,9 @@ const showPlayers = (players) => {
     // create the header row and add the field titles to it
     const headrow = document.createElement('tr');
     fields.forEach(field => {
-        headrow.innerHTML += `<th>${field}</th>`;
+        let classText = '';
+        if(field === 'PLAYER') classText = ' class="playerName"';
+        headrow.innerHTML += `<th${classText}>${field}</th>`;
     });
     table.appendChild(headrow);
 
@@ -212,4 +214,8 @@ $('#lookup-form').submit((e) => {
     const lookupName = $('#manual-lookup').val();
     $('#manual-lookup').val('');
     window.misc.manualLookup(lookupName);
+});
+
+$('#exit-button').click(async () => {
+    window.misc.exit();
 });

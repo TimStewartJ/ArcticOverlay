@@ -7,6 +7,7 @@
 
 html {
     height: 100%;
+    /* border-radius: 20px; */
 }
 
 body {
@@ -14,6 +15,8 @@ body {
     font-family: "Roboto";
     margin: 0.5em;
     height: calc(100% - 1em);
+    /* border-radius: 20px; */
+    overflow: hidden;
 }
 
 .dark-mode {
@@ -23,21 +26,25 @@ body {
 
 .light-mode {
     background-color: #daf0ee;
+    /* border-width: 3px;
+    border-radius: 20px;
+    border-color: #ffffff; */
     color: #3b413c;
 }
+
+/* 
+Header Things 
+*/
 
 header {
     /* position: fixed; */
     top: 0;
     display: flex;
     flex-direction: row;
-    color: #94d1be; /*
-    border-style: solid;
-    border-color: #9db5b2;
-    border-width: 0.25em;
-    border-radius: 1em;*/
+    color: #94d1be; 
     padding: 0.25em;
     height: 4em;
+    -webkit-app-region: drag;
 }
 
 header h1 {
@@ -46,6 +53,26 @@ header h1 {
     font-size: 3em;
     vertical-align: middle;
 }
+
+.header-button {
+    -webkit-app-region: no-drag;
+    transition: all 0.25s;
+    font-size: 3em;
+    cursor: pointer;
+}
+
+.header-button:hover {
+    transform: scale(110%);
+}
+
+#notice-text {
+    color: red;
+}
+
+
+/* 
+Table Things
+*/
 
 #main-table {
     font-family: "MinecraftRegular";
@@ -67,8 +94,12 @@ header h1 {
     text-align: center;
 }
 
-#notice-text {
+.nick {
     color: red;
+}
+
+.playerName {
+    min-width: 13em;
 }
 
 /* settings stuff */
@@ -87,19 +118,21 @@ header h1 {
 }
 
 #settings-button {
-    transition: all 0.5s;
-    font-size: 3em;
+    transition: all 0.25s;
     /* transform: rotate(0deg); */
 }
 
 #settings-button-container {
     margin: auto 0.25em auto auto;
-    cursor: pointer;
-    transition: all 0.25s;
 }
 
 #settings-button-container:hover {
     transform: scale(110%);
+}
+
+#exit-button {
+    margin: auto 0.25em auto 0;
+    font-size: 3.5em;
 }
 
 /* button {
@@ -112,15 +145,14 @@ header h1 {
     /* transform: rotate(180deg); */
 }
 
-.nick {
-    color: red;
-}
-
 #misc-footer {
     bottom: 0;
     position: absolute;
     width: calc(100% - 1em);
-    padding-bottom: 2em;
+    padding-bottom: 1em;
+    /* border-radius: 20px;
+    border-color: white;
+    border-width: 5px; */
 }
 
 

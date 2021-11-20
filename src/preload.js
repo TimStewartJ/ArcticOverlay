@@ -20,4 +20,5 @@ contextBridge.exposeInMainWorld('players', {
 contextBridge.exposeInMainWorld('misc', {
     manualLookup: (data) => ipcRenderer.send('manualLookup', data),
     clearTable: () => ipcRenderer.send('clearTable'),
+    exit: () => ipcRenderer.send('exit'),
 });
