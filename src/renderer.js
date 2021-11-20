@@ -136,7 +136,7 @@ window.settings.noticeText('noticeText', (text) => {
 let settingsClicked = false;
 let transitioning = false;
 
-$('#settings-button').click(() => {
+const settingsTransition = () => {
     const transitionLength = 500;
     if(!transitioning) {
         transitioning = true;
@@ -155,6 +155,10 @@ $('#settings-button').click(() => {
         transitioning = false;
         settingsClicked = !settingsClicked;
     }, transitionLength);
+};
+
+$('#settings-button').click(() => {
+    settingsTransition();
 });
 
 $('#client-select').change(async () => {
@@ -216,5 +220,6 @@ $('#lookup-form').submit((e) => {
 });
 
 $('#exit-button').click(async () => {
-    window.misc.exit();
+    if(settingsClicked) settingsTransition();
+    else window.misc.exit();
 });
