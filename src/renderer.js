@@ -181,6 +181,21 @@ $('#mode-select').change(async () => {
     });
 });
 
+$('#darkmode').change(async (data) => {
+    if(data.target.checked) {
+        document.body.classList.add('dark-mode');
+        document.getElementById('misc-footer').classList.add('dark-mode');
+        document.body.classList.remove('light-mode');
+        document.getElementById('misc-footer').classList.remove('light-mode');
+    }
+    else {
+        document.body.classList.remove('dark-mode');
+        document.getElementById('misc-footer').classList.remove('dark-mode');
+        document.body.classList.add('light-mode');
+        document.getElementById('misc-footer').classList.add('light-mode');
+    }
+});
+
 // misc functions
 
 // $('#lookup-submit').click(async () => {

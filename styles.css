@@ -10,12 +10,20 @@ html {
 }
 
 body {
-    background-color: #daf0ee;
-    color: #3b413c; 
     /* #506184*/
     font-family: "Roboto";
     margin: 0.5em;
     height: calc(100% - 1em);
+}
+
+.dark-mode {
+    background-color: rgb(41, 41, 41);
+    color: #daf0ee;
+}
+
+.light-mode {
+    background-color: #daf0ee;
+    color: #3b413c;
 }
 
 header {
@@ -113,7 +121,6 @@ header h1 {
     position: absolute;
     width: calc(100% - 1em);
     padding-bottom: 2em;
-    background-color: #daf0ee;
 }
 
 
