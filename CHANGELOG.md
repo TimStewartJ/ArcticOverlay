@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+### Removed
+ - Default title bar, replaced with custom one.
+### Added
+ - Custom title bar.
+ - New app icon.
+### Changed
+ - Miscellaneous visuals.
+
 ## [1.0.1] - 2021-11-19
 ### Added
  - Dark mode.
