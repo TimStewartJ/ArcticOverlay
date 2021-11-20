@@ -28,6 +28,11 @@ app.on('ready', () => {
         height: mainWindowState.height,
         minWidth: 700,
         minHeight: 400,
+        frame: false,
+        transparent: true,
+        resizable: true,
+        show: false,
+        // backgroundColor: '#00ffffff',
         webPreferences: {
             nodeIntegration: true,
             preload: pathjs.join(__dirname, 'src/preload.js')
@@ -98,6 +103,10 @@ app.on('ready', () => {
 
     ipcMain.on('manualLookup', (e, data) => {
         manualLookup(data, win, read('key'));
+    });
+
+    ipcMain.on('exit', (e, data) => {
+        win.close();
     });
 });
 
