@@ -123,16 +123,10 @@ window.players.delete('deletePlayer', (player) => {
 window.settings.initSettings('initSettings', (settings) => {
     $(`#${settings.client}`).prop('selected', true);
     $('#autowho').prop('checked', settings.autowho);
+    $('#darkmode').prop('checked', settings.darkmode);
     $(`#${settings.mode}`).prop('selected', true);
     mode = settings.mode;
-});
-
-window.settings.invalidKey('invalidKey', () => {
-    $('#notice-text').text('INVALID KEY');
-});
-
-window.settings.validKey('validKey', () => {
-    $('#notice-text').text('');
+    themeChange(settings.darkmode);
 });
 
 window.settings.noticeText('noticeText', (text) => {
@@ -164,11 +158,11 @@ $('#settings-button').click(() => {
 });
 
 $('#client-select').change(async () => {
-    await window.settings.clientSelect($('#client-select :selected').val());
+    await window.settings.updateSettings({ type: 'client', client: $('#client-select :selected').val() });
 });
 
 $('#autowho').change(async (data) => {
-    await window.settings.autowhoToggle(data.target.checked);
+    await window.settings.updateSettings({ type: 'autowho', autowho: data.target.checked });
 });
 
 $('#mode-select').change(async () => {
@@ -177,14 +171,14 @@ $('#mode-select').change(async () => {
     $('.player').each(function () {
         players.push($(this).attr('id'));
     });
-    await window.settings.modeSelect({
+    await window.settings.updateSettings({ type: 'modeSelect', modeSelect: {
         mode: mode,
         players: players,
-    });
+    }});
 });
 
-$('#darkmode').change(async (data) => {
-    if(data.target.checked) {
+const themeChange = (darkmode) => {
+    if(darkmode) {
         document.body.classList.add('dark-mode');
         document.getElementById('misc-footer').classList.add('dark-mode');
         document.body.classList.remove('light-mode');
@@ -196,6 +190,11 @@ $('#darkmode').change(async (data) => {
         document.body.classList.add('light-mode');
         document.getElementById('misc-footer').classList.add('light-mode');
     }
+};
+
+$('#darkmode').change(async (data) => {
+    themeChange(data.target.checked);
+    await window.settings.updateSettings({ type: 'darkmode', darkmode: data.target.checked });
 });
 
 // misc functions

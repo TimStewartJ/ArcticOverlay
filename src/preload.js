@@ -3,11 +3,7 @@ const { contextBridge, ipcRenderer, ipcMain } = require('electron');
 contextBridge.exposeInMainWorld('settings', {
     initSettings: (event, func) => ipcRenderer.once('initSettings', (event, data) => func(data)),
     noticeText: (event, func) => ipcRenderer.on('noticeText', (event, data) => func(data)),
-    invalidKey: (event, func) => ipcRenderer.on('invalidKey', (event, data) => func()),
-    validKey: (event, func) => ipcRenderer.on('validKey', (event, data) => func()),
-    autowhoToggle: (data) => ipcRenderer.send('autowhoToggle', data),
-    clientSelect: (data) => ipcRenderer.send('clientSelect', data),
-    modeSelect: (data) => ipcRenderer.send('modeSelect', data),
+    updateSettings: (data) => ipcRenderer.send('updateSettings', data),
 });
 
 contextBridge.exposeInMainWorld('players', {
@@ -19,6 +15,5 @@ contextBridge.exposeInMainWorld('players', {
 
 contextBridge.exposeInMainWorld('misc', {
     manualLookup: (data) => ipcRenderer.send('manualLookup', data),
-    clearTable: () => ipcRenderer.send('clearTable'),
     exit: () => ipcRenderer.send('exit'),
 });
