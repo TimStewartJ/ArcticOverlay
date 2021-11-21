@@ -146,6 +146,18 @@ exports.readFromFile = async (path, win, key) => {
                 write('key', key);
                 if(await validKey(key)) win.webContents.send('noticeText', '');
             }
+            else if (line.includes('Can\'t find a player by the name of \'.')) {
+                const command = line.split('Can\'t find a player by the name of \'.')[1].replace('\'','').replace('.','');
+                switch(command) {
+                case 'clear':
+                    win.webContents.send('showPlayers', []);
+                    break;
+                default:
+                    win.webContents.send('addPlayer', command);
+                    fetchAndUpdatePlayer(command, win, key);
+                    break;
+                }
+            }
         }
         else if(colons === 1) {
             if(line.includes('ONLINE: ')) { // case for /who
