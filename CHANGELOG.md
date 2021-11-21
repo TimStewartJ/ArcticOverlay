@@ -1,8 +1,13 @@
 # Changelog
 
 ## Unreleased
+### Added
+ - Players who say the user's name are added to the overlay.
 ### Changed
  - Close button now closes settings if settings are up.
+ - Line reading logic.
+### Fixed
+ - Icon not showing up in header.
 
 ## [1.1.0] - 2021-11-20
 ### Removed

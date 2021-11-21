@@ -91,55 +91,49 @@ exports.readFromFile = async (path, win, key) => {
     });
 
     const process = async (line) => {
-        // console.log(line);
-        if(/.*\[CHAT\] (ONLINE:)?(\w| |\(|\/|\)|,|!|\[|\]|\+)+/.test(line)) { // this particular regex will prevent anything said by a player from getting futher
-            console.log(`LEGIT LINE: ${  line}`);
-            if(line.includes(' ONLINE: ')) { // case for /who
-                const players = line.split(' [CHAT] ONLINE: ')[1].split(', ');
-                win.webContents.send('showPlayers', players);
-                players.forEach( async (player) => {
-                    fetchAndUpdatePlayer(player, win, key);
-                });
+        const temp = line.split(' [CHAT] ');
+        if(temp.length === 1) return;
+        line = temp[1];
+        const colons = line.split(':').length - 1;
+        console.log(`${colons}: ${line}`);
+        if(colons === 0) {
+            if (line.includes(' has joined ')) { // case for someone joining the lobby
+                if(read('autowho') && (!autowho || line.includes(`${user} has joined`))) {
+                    autowho = true;
+                    activeWindow().then((result)=>{
+                        // console.log(result);
+                        if((result.owner.name).includes('java')) {
+                            ks.startBatch()
+                                .batchTypeKey('control') // We send these keys before because they can often interfere with `/who` if they were already pressed down. Might (try) to make this configurable (somehow) if enough people use different layouts for it to matter.
+                                .batchTypeKey('w')
+                                .batchTypeKey('a')
+                                .batchTypeKey('s')
+                                .batchTypeKey('d')
+                                .batchTypeKey('space')
+                                .batchTypeKey('slash', 50)
+                                .batchTypeKeys(['w','h','o','enter'])
+                                .sendBatch();
+                        }
+                    });
+                }
+                const player = line.split(' has joined')[0];
+                win.webContents.send('addPlayer', player);
+                fetchAndUpdatePlayer(player, win, key);
             }
-            else if (/has (joined \(\d+\/\d+\)|quit)!/.test(line)) {
-                if (line.includes(' has joined ')) { // case for someone joining the lobby
-                    if(read('autowho') && (!autowho || line.includes(`${user} has joined`))) {
-                        autowho = true;
-                        activeWindow().then((result)=>{
-                            console.log(result);
-                            if((result.owner.name).includes('java')) {
-                                ks.startBatch()
-                                    .batchTypeKey('control') // We send these keys before because they can often interfere with `/who` if they were already pressed down. Might (try) to make this configurable (somehow) if enough people use different layouts for it to matter.
-                                    .batchTypeKey('w')
-                                    .batchTypeKey('a')
-                                    .batchTypeKey('s')
-                                    .batchTypeKey('d')
-                                    .batchTypeKey('space')
-                                    .batchTypeKey('slash', 50)
-                                    .batchTypeKeys(['w','h','o','enter'])
-                                    .sendBatch();
-                            }
-                        });
-                    }
-                    const player = line.split(' [CHAT] ')[1].split(' has joined')[0];
-                    win.webContents.send('addPlayer', player);
-                    fetchAndUpdatePlayer(player, win, key);
-                }
-                else if (line.includes(' has quit!')) { // case for someone quiting the lobby
-                    const player = line.split(' [CHAT] ')[1].split(' has quit!')[0];
-                    win.webContents.send('deletePlayer', player);
-                }
+            else if (line.includes(' has quit!')) { // case for someone quiting the lobby
+                const player = line.split(' has quit!')[0];
+                win.webContents.send('deletePlayer', player);
             }
             else if (line.includes('FINAL KILL!')) {
-                const player = line.split(' [CHAT] ')[1].split(' ')[0];
+                const player = line.split(' ')[0];
                 win.webContents.send('deletePlayer', player);
             }
             else if (line.includes('disconnected')) {
-                const player = line.split(' [CHAT] ')[1].split(' ')[0];
+                const player = line.split(' ')[0];
                 win.webContents.send('deletePlayer', player);
             }
             else if (line.includes('reconnected.')) {
-                const player = line.split(' [CHAT] ')[1].split(' ')[0];
+                const player = line.split(' ')[0];
                 win.webContents.send('addPlayer', player);
                 fetchAndUpdatePlayer(player, win, key);
             }
@@ -148,9 +142,23 @@ exports.readFromFile = async (path, win, key) => {
                 autowho = false;
             }
             else if (line.includes('Your new API key is ')) {
-                key = line.split('[CHAT] Your new API key is ')[1];
+                key = line.split('Your new API key is ')[1];
                 write('key', key);
                 if(await validKey(key)) win.webContents.send('noticeText', '');
+            }
+        }
+        else if(colons === 1) {
+            if(line.includes('ONLINE: ')) { // case for /who
+                const players = line.split('ONLINE: ')[1].split(', ');
+                win.webContents.send('showPlayers', players);
+                players.forEach( async (player) => {
+                    fetchAndUpdatePlayer(player, win, key);
+                });
+            }
+            else if(line.includes(user)) {
+                const player = line.split(':')[0].split(' ').slice(-1)[0].match(/\w+/)[0]; // this extracts the user who typed in chat
+                win.webContents.send('addPlayer', player);
+                fetchAndUpdatePlayer(player, win, key);
             }
         }
     };
