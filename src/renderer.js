@@ -203,15 +203,6 @@ $('#darkmode').change(async (data) => {
 
 // misc functions
 
-// $('#lookup-submit').click(async () => {
-//     await window.misc.manualLookup($('#manual-lookup').val());
-// });
-
-$('#clear-table').click(async () => {
-    // await window.misc.clearTable();
-    showPlayers([]);
-});
-
 $('#lookup-form').submit((e) => {
     e.preventDefault();
     const lookupName = $('#manual-lookup').val();

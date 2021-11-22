@@ -10,6 +10,8 @@
  - Line reading logic.
 ### Fixed
  - Icon not showing up in header.
+### Removed
+ - Clear table button.
 
 ## [1.1.0] - 2021-11-20
 ### Removed
