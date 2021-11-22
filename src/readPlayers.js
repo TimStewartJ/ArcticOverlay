@@ -102,7 +102,7 @@ exports.readFromFile = async (path, win, key) => {
                     autowho = true;
                     activeWindow().then((result)=>{
                         // console.log(result);
-                        if((result.owner.name).includes('java')) {
+                        if((result.owner.name).toLowerCase().includes('java') || (result.owner.name).toLowerCase().includes('minecraft')) {
                             ks.startBatch()
                                 .batchTypeKey('control') // We send these keys before because they can often interfere with `/who` if they were already pressed down. Might (try) to make this configurable (somehow) if enough people use different layouts for it to matter.
                                 .batchTypeKey('w')
@@ -145,6 +145,12 @@ exports.readFromFile = async (path, win, key) => {
                 key = line.split('Your new API key is ')[1];
                 write('key', key);
                 if(await validKey(key)) win.webContents.send('noticeText', '');
+            }
+            // stuff for other party commands
+            else if(line.includes(' to the party! They have 60 seconds to accept.')) {
+                const player = line.match(/\S*(?=( to the party! They have 60 seconds to accept.))/)[0];
+                win.webContents.send('addPlayer', player);
+                fetchAndUpdatePlayer(player, win, key);
             }
             else if (line.includes('Can\'t find a player by the name of \'.')) {
                 const command = line.split('Can\'t find a player by the name of \'.')[1].replace('\'','').replace('.','');

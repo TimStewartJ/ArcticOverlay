@@ -1,10 +1,11 @@
 # Changelog
 
-## Unreleased
+## [1.2.0] - 2021-11-21
 ### Added
  - Players who say the user's name are added to the overlay.
  - Commands in-game via `/t .`.
  - `/p list` support.
+ - Players invited to the party are added to the overlay.
 ### Changed
  - Close button now closes settings if settings are up.
  - Line reading logic.
