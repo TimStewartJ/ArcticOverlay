@@ -167,6 +167,24 @@ exports.readFromFile = async (path, win, key) => {
                     fetchAndUpdatePlayer(player, win, key);
                 });
             }
+            // stuff for p list
+            else if(line.includes('Party Leader: ')) {
+                let player = line.split(':')[1].split(' ');
+                player = player[1].includes('[') ? player[2] : player[1];
+                win.webContents.send('showPlayers', [player]);
+                fetchAndUpdatePlayer(player, win, key);
+            }
+            else if(line.includes('Party Members: ') || line.includes('Party Moderators: ')) {
+                const players = line.split(':')[1].split('?').slice(0, -1);
+                players.forEach(player => {
+                    player = player.split(' ');
+                    console.log(player);
+                    player = player[1].includes('[') ? player[2] : player[1];
+                    win.webContents.send('addPlayer', player);
+                    fetchAndUpdatePlayer(player, win, key);
+                });
+            }
+            // if someone says the user's name
             else if(line.includes(user)) {
                 const player = line.split(':')[0].split(' ').slice(-1)[0].match(/\w+/)[0]; // this extracts the user who typed in chat
                 win.webContents.send('addPlayer', player);

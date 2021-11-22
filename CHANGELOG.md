@@ -3,6 +3,8 @@
 ## Unreleased
 ### Added
  - Players who say the user's name are added to the overlay.
+ - Commands in-game via `/t .`.
+ - `/p list` support.
 ### Changed
  - Close button now closes settings if settings are up.
  - Line reading logic.

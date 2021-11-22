@@ -88,7 +88,7 @@ exports.fetchSniperStatus = (player, key) => {
         fetch(`https://statsify.net/api/overlay/sniper?key=${key}&${lookup}`)
             .then(res => res.json()).catch(err => resolve({error: true, reason: err, user: player}))
             .then(data => {
-                if(data.success) resolve({error: false, sniper: data.sniper, sniperData: true, user: player});
+                if(data && data.success) resolve({error: false, sniper: data.sniper, sniperData: true, user: player});
                 else {
                     resolve({error: true, user: player});
                 }
