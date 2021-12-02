@@ -2,8 +2,6 @@ const { read, write } = require('./settings');
 const { fetchPlayer, validKey, getDisplayName, fetchSniperStatus } = require('./fetchPlayers.js');
 const activeWindow = require('active-win');
 const ks = require('node-key-sender');
-// const activeWindows = require('electron-active-window');
-
 
 // this will call upon the api to get the player data and then update it on the front end
 const fetchAndUpdatePlayer = async (player, win, key) => {
@@ -12,7 +10,6 @@ const fetchAndUpdatePlayer = async (player, win, key) => {
         if(!playerData.error) win.webContents.send('updatePlayer', playerData);
         const sniperData = await fetchSniperStatus(player, key);
         if(!sniperData.error && sniperData.sniper) win.webContents.send('updatePlayer', sniperData);
-        // else console.log(`${player  } ${  playerData}`);
     }
 };
 
@@ -34,6 +31,7 @@ exports.readFromFile = async (path, win, key) => {
     // because multiple lines could be written in the same moment, we now manually read off the newest bytes with fs
     // this is the fastest method so far, but further experimentation is required
     // the package `always-tail` works but is not very fast
+    // maybe use the package 'tail'?
 
     const buffSize = 2056;
 
@@ -86,6 +84,8 @@ exports.readFromFile = async (path, win, key) => {
             console.log(filename);
             fs.open(path, 'r', (err, fd) => {
                 file = fd;
+                logData = fs.statSync(path);
+                filesize = logData.size;
             });
         }
     });
@@ -100,8 +100,8 @@ exports.readFromFile = async (path, win, key) => {
             if (line.includes(' has joined ')) { // case for someone joining the lobby
                 if(read('autowho') && (!autowho || line.includes(`${user} has joined`))) {
                     autowho = true;
-                    activeWindow().then((result)=>{
-                        // console.log(result);
+                    activeWindow({screenRecordingPermission: false}).then((result)=>{
+                        console.log(result);
                         if((result.owner.name).toLowerCase().includes('java') || (result.owner.name).toLowerCase().includes('minecraft')) {
                             ks.startBatch()
                                 .batchTypeKey('control') // We send these keys before because they can often interfere with `/who` if they were already pressed down. Might (try) to make this configurable (somehow) if enough people use different layouts for it to matter.

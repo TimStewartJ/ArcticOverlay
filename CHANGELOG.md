@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+### Fixed
+ - File size fetching when `latest.log` gets renamed.
+ - No more screen recording permission.
+
 ## [1.2.0] - 2021-11-21
 ### Added
  - Players who say the user's name are added to the overlay.
