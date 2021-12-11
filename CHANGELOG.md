@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+### Changed
+ - Utility functions for improved runtime and readability.
 ### Fixed
  - File size fetching when `latest.log` gets renamed.
  - No more screen recording permission.

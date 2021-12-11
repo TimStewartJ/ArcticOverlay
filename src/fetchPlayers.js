@@ -45,15 +45,13 @@ exports.fetchPlayer = (player, key) => {
                     uuidCache[player] = data.player.uuid;
                     const bedwars = data.player.stats ? data.player.stats.Bedwars || {} : {};
                     const stars = getBwLevel(bedwars.Experience || 0);
-                    const rank = getRank(data.player);
-                    const plusColor = getPlusColor(rank, data.player.rankPlusColor);
-                    const formattedRank = getFormattedRank(rank, plusColor.mc);
+                    const formattedRank = getFormattedRank(data.player);
 
                     data = {
                         user: data.player.displayname,
                         uuid: data.player.uuid,
                         coloredstar: mcColor(getBwFormattedLevel(Math.trunc(stars))),
-                        rank: rank,
+                        // rank: rank,
                         displayName: `${mcColor(`${formattedRank}${data.player.displayname}`)}`,
                         stats: {
                             bedwars: {
@@ -75,7 +73,6 @@ exports.fetchPlayer = (player, key) => {
                             color: color(650, 0, (stars*Math.pow(ratio(bedwars[`${val}final_kills_bedwars`], bedwars[`${val}final_deaths_bedwars`]), 2)/10)),
                         };
                     }
-
                     resolve(data);
                 }
             });
