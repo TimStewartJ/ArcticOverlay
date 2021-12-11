@@ -14,7 +14,7 @@ The executables will not be signed. This means a warning will pop up regarding t
 
 ### Mac OS Notes
 
-The Mac version of the app will ask for permission in accessibility settings and screen recording. These are both for the autowho functionality. The permissions are necessary to detect if the current focused app is Minecraft. If it is not Minecraft, then autowho will not work.
+The Mac version of the app will ask for permission in accessibility settings. This is for the autowho functionality. The permissions are necessary to detect if the current focused app is Minecraft. If it is not Minecraft, then autowho will not be triggered.
 
 ## Updating
 
