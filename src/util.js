@@ -167,15 +167,10 @@ exports.mcColor = (text) => {
     let finalText = '';
     splitText = text.split('§').slice(1);
 
-    splitText.forEach((parts, index) => {
-        let color = '';
+    splitText.forEach(part => {
+        const color = colors[part[0]].hsl || '';
 
-        color = colors[parts[0]].hsl || '';
-
-        finalText += `<span style="color: ${color};">${parts
-            .split('')
-            .slice(1)
-            .join('')}</span>`;
+        finalText += `<span style="color: ${color};">${part.substring(1)}</span>`;
     });
     return finalText;
 };
