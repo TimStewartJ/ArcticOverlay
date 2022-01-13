@@ -10,6 +10,9 @@
   },
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=12"
+  },
   "dependencies": {
     "active-win": "^7.6.1",
     "electron-store": "^8.0.1",
