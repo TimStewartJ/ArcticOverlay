@@ -39,6 +39,9 @@
     "mac": {
       "category": "public.app-category.entertainment"
     },
+    "linux": {
+      "publish": ["github"]
+    },
     "asar": false
   }
 }
