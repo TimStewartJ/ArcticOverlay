@@ -1,11 +1,10 @@
 {
   "name": "arctic-overlay",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "An overlay for Hypixel Bedwars",
   "main": "index.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder",
     "lint": "eslint --fix --ext .js,.json src/ .eslintrc.js index.js",
     "release": "electron-builder --publish always"
   },

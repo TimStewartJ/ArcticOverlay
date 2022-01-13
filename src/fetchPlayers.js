@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { color, ratio, getBwFormattedLevel, getBwLevel, mcColor, getRank, getFormattedRank, getPlusColor } = require('./util.js');
+const { color, ratio, getBwFormattedLevel, getBwLevel, mcColor, getFormattedRank } = require('./util.js');
 
 const uuidCache = {};
 const nickCache = {};
