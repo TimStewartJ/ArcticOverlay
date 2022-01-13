@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [1.2.1] - 2022-01-13
 ### Changed
  - Utility functions for improved runtime and readability.
 ### Fixed
