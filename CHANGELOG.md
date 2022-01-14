@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0] - 2022-01-13
+### Changed
+ - Colors are now based on set cutoffs.
+ - Moved checkboxes to the left of their labels.
+ - Coloring individual stats or the whole player's stats is toggleable.
+
 ## [1.2.1] - 2022-01-13
 ### Changed
  - Utility functions for improved runtime and readability.

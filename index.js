@@ -76,6 +76,9 @@ app.on('ready', () => {
     if(!read('theme-darkmode')) {
         write('theme-darkmode', false);
     }
+    if(!read('statColor')) {
+        write('statColor', false);
+    }
 
     win.webContents.once('dom-ready', () => {
         win.webContents.send('initSettings', {
@@ -83,7 +86,8 @@ app.on('ready', () => {
             client: read('client'),
             autowho: read('autowho'),
             mode: read('mode'),
-            darkmode: read('theme-darkmode')
+            darkmode: read('theme-darkmode'),
+            statColor: read('statColor')
         });
         // start reading from the file immediately
         readFromFile(read('path'), win, read('key'));
@@ -106,6 +110,9 @@ app.on('ready', () => {
             break;
         case 'darkmode':
             write('theme-darkmode', data.darkmode);
+            break;
+        case 'statColor':
+            write('statColor', data.statColor);
             break;
         }
     });

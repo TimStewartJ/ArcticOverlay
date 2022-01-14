@@ -5,7 +5,7 @@ let mode;
 
 let playerData = {};
 
-const colorMode = true;
+let statColor = false;
 
 const sortTable = (tableName) => {
     console.time('sort');
@@ -99,7 +99,7 @@ window.players.update('updatePlayer', (data) => {
     //if the player is not a nick, color them according to their threat level
     if(!data.nick) {
         // if we are on statsify color mode
-        if(!colorMode)
+        if(statColor)
         {
             const rgb = data.stats.bedwars[mode].colors.overall;
             $(`#${data.user.toLowerCase()}`).css('color', `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`);
@@ -125,7 +125,7 @@ window.players.update('updatePlayer', (data) => {
             break;
         default:
             fieldContent = data.nick ? 'NICK' : ratios.includes(field) ? data.stats.bedwars[mode][field.toLowerCase()].toFixed(2) : data.stats.bedwars[mode][field.toLowerCase()];
-            if(!data.nick && colorMode)
+            if(!data.nick && !statColor)
             {
                 const fieldColor = data.stats.bedwars[mode].colors[field.toLowerCase()];
                 fieldNode.style.color = `rgb(${fieldColor[0]},${fieldColor[1]},${fieldColor[2]})`;
@@ -135,7 +135,6 @@ window.players.update('updatePlayer', (data) => {
         fieldNode.innerHTML = fieldContent;
         field !== 'PLAYER' ? fieldNode.classList.add('centered') : fieldNode.classList.add('player-name');
         playerRow.appendChild(fieldNode);
-        // playerRow.innerHTML += `<td${field !== 'PLAYER' ? ' class=\"centered\"' : ' class="player-name"'}${colorMode ? `rgb(${rgb[0]},${rgb[1]},${rgb[2]})` : ''}>${fieldContent}</td>`;
     });
     sortTable('main-table'); // re sort the table
 });
@@ -161,8 +160,10 @@ window.settings.initSettings('initSettings', (settings) => {
     $(`#${settings.client}`).prop('selected', true);
     $('#autowho').prop('checked', settings.autowho);
     $('#darkmode').prop('checked', settings.darkmode);
+    $('#statColor').prop('checked', settings.statColor);
     $(`#${settings.mode}`).prop('selected', true);
     mode = settings.mode;
+    statColor = settings.statColor;
     themeChange(settings.darkmode);
 });
 
@@ -236,6 +237,11 @@ const themeChange = (darkmode) => {
 $('#darkmode').change(async (data) => {
     themeChange(data.target.checked);
     await window.settings.updateSettings({ type: 'darkmode', darkmode: data.target.checked });
+});
+
+$('#statColor').change(async (data) => {
+    statColor = data.target.checked;
+    await window.settings.updateSettings({ type: 'statColor', statColor: data.target.checked });
 });
 
 // misc functions

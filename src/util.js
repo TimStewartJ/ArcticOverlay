@@ -143,7 +143,7 @@ const tieredColors = [[170, 170, 170], [255,255,255], [255, 170, 0], [0, 170, 17
 exports.color = (top, bottom, val) => {
     const norm = 25/top;
     val *= norm;
-    return tieredColors[Math.floor(Math.sqrt(val))];
+    return tieredColors[Math.min(tieredColors.length - 1, Math.floor(Math.sqrt(val)))];
 };
 
 exports.getBwLevel = (exp = 0) => {
