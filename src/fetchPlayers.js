@@ -70,9 +70,18 @@ exports.fetchPlayer = (player, key) => {
                             final: bedwars[`${val}final_kills_bedwars`] || 0,
                             wlr: ratio(bedwars[`${val}wins_bedwars`], bedwars[`${val}losses_bedwars`]),
                             bblr: ratio(bedwars[`${val}beds_broken_bedwars`], bedwars[`${val}beds_lost_bedwars`]),
-                            color: color(650, 0, (stars*Math.pow(ratio(bedwars[`${val}final_kills_bedwars`], bedwars[`${val}final_deaths_bedwars`]), 2)/10)),
+                        };
+                        data.stats.bedwars[key].colors = {
+                            overall: color(650, 0, (stars*Math.pow(ratio(bedwars[`${val}final_kills_bedwars`], bedwars[`${val}final_deaths_bedwars`]), 2)/10)),
+                            stars: color(900, 0, data.stats.bedwars[key].stars),
+                            ws: color(100, 0, data.stats.bedwars[key].ws),
+                            fkdr: color(25, 0, data.stats.bedwars[key].fkdr),
+                            final: color(30000, 0, data.stats.bedwars[key].final),
+                            wlr: color(10, 0, data.stats.bedwars[key].wlr),
+                            bblr: color(7.5, 0, data.stats.bedwars[key].bblr),
                         };
                     }
+
                     resolve(data);
                 }
             });

@@ -1,8 +1,14 @@
-const fields = ['PLAYER', 'TAG', 'WS', 'FKDR', 'FINAL', 'WLR', 'BBLR'];
+const fields = ['PLAYER', 'TAG', 'WS', 'FKDR', 'WLR', 'BBLR', 'FINAL'];
+const ratios = ['FKDR', 'WLR', 'BBLR'];
 
 let mode;
 
+let playerData = {};
+
+const colorMode = true;
+
 const sortTable = (tableName) => {
+    console.time('sort');
     const table = document.getElementById(tableName);
     let rows, i, x, y, shouldSwitch;
     let switching = true;
@@ -12,12 +18,14 @@ const sortTable = (tableName) => {
         for (i = 1; i < (rows.length - 1); i++) {
             // Start by saying there should be no switching:
             shouldSwitch = false;
+
             /* Get the two elements you want to compare,
             one from current row and one from the next: */
-            x = rows[i].getElementsByTagName('TD')[3];
-            y = rows[i + 1].getElementsByTagName('TD')[3];
+            x = rows[i].getAttribute('id');
+            y = rows[i + 1].getAttribute('id');
+
             // Check if the two rows should switch place:
-            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+            if (playerData[x].sortPriority < playerData[y].sortPriority) {
                 // If so, mark as a switch and break the loop:
                 shouldSwitch = true;
                 break;
@@ -30,6 +38,7 @@ const sortTable = (tableName) => {
             switching = true;
         }
     }
+    console.timeEnd('sort');
 };
 
 // table updating functions from main
@@ -43,13 +52,20 @@ const createPlayerRow = (name) => {
         if(field === 'PLAYER') node.innerHTML += `<td class="player-name">${name}</td>`;
         else node.innerHTML += '<td class=\"centered\">...</td>';
     });
+
+    // add blank player to playerData
+    playerData[name.toLowerCase()] = {sortPriority: -1};
+
     return node;
 };
 
 // reset the table and show the players in the provided input
 const showPlayers = (players) => {
     const table = document.getElementById('main-table');
+
     table.innerHTML = ''; // reset table
+    playerData = {}; // reset player data structure
+
     // create the header row and add the field titles to it
     const headrow = document.createElement('tr');
     fields.forEach(field => {
@@ -78,17 +94,27 @@ window.players.update('updatePlayer', (data) => {
     const playerRow = document.getElementById(data.user.toLowerCase()); // find the player row
     playerRow.innerHTML = ''; // reset the player row's data
 
+    playerData[data.user.toLowerCase()] = data; // set the player's data in the dictionary
+
     //if the player is not a nick, color them according to their threat level
     if(!data.nick) {
-        const rgb = data.stats.bedwars[mode].color;
-        $(`#${data.user.toLowerCase()}`).css('color', `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`);
+        // if we are on statsify color mode
+        if(!colorMode)
+        {
+            const rgb = data.stats.bedwars[mode].colors.overall;
+            $(`#${data.user.toLowerCase()}`).css('color', `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`);
+        }
+        
+        playerData[data.user.toLowerCase()].sortPriority = data.stats.bedwars[mode].fkdr;
     }
     else {
         playerRow.classList.add('nick');
+        playerData[data.user.toLowerCase()].sortPriority = 1000;
     }
 
     // populate each field with the necessary data
     fields.forEach(field => {
+        const fieldNode = document.createElement('td');
         let fieldContent;
         switch(field.toLowerCase()) {
         case 'player':
@@ -98,10 +124,18 @@ window.players.update('updatePlayer', (data) => {
             fieldContent = data.nick ? 'NICK' : '';
             break;
         default:
-            fieldContent = data.nick ? 'NICK' : data.stats.bedwars[mode][field.toLowerCase()] || '0';
+            fieldContent = data.nick ? 'NICK' : ratios.includes(field) ? data.stats.bedwars[mode][field.toLowerCase()].toFixed(2) : data.stats.bedwars[mode][field.toLowerCase()];
+            if(!data.nick && colorMode)
+            {
+                const fieldColor = data.stats.bedwars[mode].colors[field.toLowerCase()];
+                fieldNode.style.color = `rgb(${fieldColor[0]},${fieldColor[1]},${fieldColor[2]})`;
+            }   
             break;
         }
-        playerRow.innerHTML += `<td${field !== 'PLAYER' ? ' class=\"centered\"' : ' class="player-name"'}>${fieldContent}</td>`;
+        fieldNode.innerHTML = fieldContent;
+        field !== 'PLAYER' ? fieldNode.classList.add('centered') : fieldNode.classList.add('player-name');
+        playerRow.appendChild(fieldNode);
+        // playerRow.innerHTML += `<td${field !== 'PLAYER' ? ' class=\"centered\"' : ' class="player-name"'}${colorMode ? `rgb(${rgb[0]},${rgb[1]},${rgb[2]})` : ''}>${fieldContent}</td>`;
     });
     sortTable('main-table'); // re sort the table
 });
@@ -116,6 +150,9 @@ window.players.delete('deletePlayer', (player) => {
     // find the row corresponding to the player, and if it exists, delete it
     const row = document.getElementById(player.toLowerCase());
     if(row) row.parentNode.removeChild(row);
+
+    // remove the player from playerData
+    delete playerData[player.toLowerCase()];
 });
 
 // settings functions

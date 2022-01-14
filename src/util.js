@@ -135,16 +135,15 @@ const prestigeColors = [
 // general functions
 
 exports.ratio = (top = 0, bottom = 1) => {
-    return (top / bottom).toFixed(2);
+    return (top / bottom);
 };
 
+const tieredColors = [[170, 170, 170], [255,255,255], [255, 170, 0], [0, 170, 170], [170, 0, 0], [170, 0, 170]];
+
 exports.color = (top, bottom, val) => {
-    val = Math.min(top, val);
-    return [
-        Math.floor(val * (255 / top)),
-        Math.floor((top - val) * (255 / top)),
-        0,
-    ];
+    const norm = 25/top;
+    val *= norm;
+    return tieredColors[Math.floor(Math.sqrt(val))];
 };
 
 exports.getBwLevel = (exp = 0) => {
