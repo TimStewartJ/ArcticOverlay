@@ -15,8 +15,8 @@ app.on('ready', () => {
 
     // Load the previous state with fallback to defaults
     const mainWindowState = windowStateKeeper({
-        defaultWidth: 1000,
-        defaultHeight: 700
+        defaultWidth: 800,
+        defaultHeight: 500
     });
 
     // init the window and set it to load from index.html
@@ -26,7 +26,7 @@ app.on('ready', () => {
         y: mainWindowState.y,
         width: mainWindowState.width,
         height: mainWindowState.height,
-        minWidth: 700,
+        minWidth: 800,
         minHeight: 400,
         frame: false,
         transparent: true,

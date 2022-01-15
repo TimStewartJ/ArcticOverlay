@@ -20,7 +20,7 @@ body {
 }
 
 .dark-mode {
-    background-color: rgb(41, 41, 41);
+    background-color: rgb(35, 35, 35);
     color: #daf0ee;
 }
 
@@ -50,14 +50,14 @@ header {
 header h1 {
     margin: auto 0.25em auto 0.25em;
     font-family: "Mohave";
-    font-size: 3em;
+    font-size: 2.5em;
     vertical-align: middle;
 }
 
 .header-button {
     -webkit-app-region: no-drag;
     transition: all 0.25s;
-    font-size: 3em;
+    font-size: 2.5em;
     cursor: pointer;
 }
 
@@ -132,7 +132,7 @@ Table Things
 
 #exit-button {
     margin: auto 0.25em auto 0;
-    font-size: 3.5em;
+    font-size: 3em;
 }
 
 /* button {
@@ -146,13 +146,38 @@ Table Things
 }
 
 #misc-footer {
-    bottom: 0;
-    position: absolute;
-    width: calc(100% - 1em);
-    padding-bottom: 1em;
-    /* border-radius: 20px;
-    border-color: white;
-    border-width: 5px; */
+    margin-top: 1em;
+    margin-bottom: 1.5em;
+    display: flex;
+    justify-content: center;
+    text-align: center;
 }
 
+#misc-footer p,
+#misc-footer form {
+    display: inline;
+    margin-right: 2em;
+    margin-left: 2em;
+    margin-top: 0;
+    margin-bottom: 0;
+}
 
+#misc-footer select,
+#misc-footer input[type=text],
+#misc-footer input[type=submit] {
+    border: none;
+    color: #daf0ee;
+    position: relative;
+    text-align: left;
+    border: 2px solid #daf0ee;
+    background: transparent;
+    padding: 0.25em;
+    font-size: var(--mc-font-size);
+    outline: none;
+}
+
+#misc-footer option {
+    background-color: #000000;
+    /* border: 2px solid rgba(0, 0, 0, 0); */
+    outline: none;
+}

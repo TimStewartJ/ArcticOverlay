@@ -159,12 +159,12 @@ window.players.delete('deletePlayer', (player) => {
 window.settings.initSettings('initSettings', (settings) => {
     $(`#${settings.client}`).prop('selected', true);
     $('#autowho').prop('checked', settings.autowho);
-    $('#darkmode').prop('checked', settings.darkmode);
+    // $('#darkmode').prop('checked', settings.darkmode);
     $('#statColor').prop('checked', settings.statColor);
     $(`#${settings.mode}`).prop('selected', true);
     mode = settings.mode;
     statColor = settings.statColor;
-    themeChange(settings.darkmode);
+    themeChange(true);
 });
 
 window.settings.noticeText('noticeText', (text) => {

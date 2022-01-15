@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+### Changed
+ - Minor aesthetic changes
+### Removed
+ - Light mode
+
 ## [1.3.0] - 2022-01-13
 ### Changed
  - Colors are now based on set cutoffs.
